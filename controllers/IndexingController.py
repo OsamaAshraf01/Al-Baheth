@@ -11,7 +11,7 @@ from .ProcessingController import ProcessingController
 class IndexingController(BaseController):
     def __init__(self):
         super().__init__()
-        self.index_dir = os.path.join(self.files_dir, "index")
+        self.index_dir = os.path.join(self.base_dir, "index")
         if not pt.java.started():
             pt.java.init()
 
@@ -59,8 +59,7 @@ class IndexingController(BaseController):
                 'text': preprocessed_text
             })
         docs = pd.DataFrame(docs)
-        docs['text'] = docs['text'].astype(str)
-        docs['docno'] = docs['docno'].astype(str)
+
         index_ref = indexer.index(docs['text'], docs['docno'])
         return index_ref
 

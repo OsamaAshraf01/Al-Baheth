@@ -23,7 +23,7 @@ class IndexingController(BaseController):
         :param file_name: Name of the file to preprocess.
         :return: Preprocessed text content.
         """
-        response = requests.get(f"http://localhost:8000/preprocess/{file_name}")
+        response = requests.get(f"http://localhost:8000/api/v1/processing/preprocess/{file_name}")
         if response.status_code != status.HTTP_200_OK:
             raise HTTPException(status_code=response.status_code, detail=response.json())
         return response.json().get("Processed Text", "")

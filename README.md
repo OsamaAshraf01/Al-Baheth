@@ -41,9 +41,7 @@ $pip install -r requirements.txt
 $cp .env.example .env
 ```
 
-Then, set your environment variables in the `.env` file.
-
-- Update `.env` with your credentials.
+Then, set your environment variables in the `.env` file, and update values with your credentials.
 
 ## Run the FastAPI Server
 

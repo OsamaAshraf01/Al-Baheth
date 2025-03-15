@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from controllers.upload import uploadController, UploadFile, File
+from controllers.UploadController import uploadController, UploadFile, File
 
 upload_route = APIRouter(
     prefix= "/upload",

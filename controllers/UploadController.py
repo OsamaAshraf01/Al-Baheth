@@ -5,6 +5,8 @@ from fastapi.responses import JSONResponse
 from fastapi import status
 
 class UploadController(BaseController):
+    def __init__(self):
+        super().__init__()
     async def upload(self, file: UploadFile = File(...)):
         file_path = os.path.join(self.files_dir, file.filename)
         try:

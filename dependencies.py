@@ -11,6 +11,11 @@ def getPDFReaderService(settings: Settings = Depends(get_settings)) -> PDFReader
     :param service_name: Name of the PDF reader service.
     :return: Instance of the PDF reader service.
     """
+
+    pass
+
+
+""""
     if settings.PDF_READER == "PyPDF2":
         return services.PyPDF2.PyPDF2ReaderService()
     
@@ -18,3 +23,4 @@ def getPDFReaderService(settings: Settings = Depends(get_settings)) -> PDFReader
         status_code=404,
         detail="PDF Reader service not found"
     )
+"""

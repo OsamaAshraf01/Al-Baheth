@@ -1,7 +1,8 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 import os
+from .BaseController import BaseController
 
-class uploadController:
+class UploadController(BaseController):
     
     async def upload(self, file: UploadFile = File(...)):
         file_path = os.path.join("assets", file.filename)

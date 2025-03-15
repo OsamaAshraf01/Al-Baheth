@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from helpers.config import get_settings, Settings
-from controllers.ProcessingController import ProcessingController
+from controllers import ProcessingController
 from fastapi.responses import JSONResponse
 from fastapi import status
 

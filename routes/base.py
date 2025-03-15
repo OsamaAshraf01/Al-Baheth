@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from helpers.config import get_settings, Settings
-from routes.upload import upload_route
 from controllers.ProcessingController import ProcessingController
 
 base_router = APIRouter(

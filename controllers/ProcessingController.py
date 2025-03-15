@@ -78,12 +78,18 @@ class ProcessingController(BaseController):
 
         return ' '.join(processed_tokens)
     
-    def preprocess(self, file_path: str) -> str:
+    def preprocess(self, file_name: str) -> str:
         """
         Preprocess the PDF file and return its cleaned text content.
         
-        :param file_path: Path to the PDF file.
+        :param file_name: Path to the PDF file.
         :return: Cleaned text content of the PDF file.
         """
-        text = self._read(file_path)
-        return self._clean(text)
+        try:
+            text = self._read(file_name)
+        except: raise Exception("Error reading the PDF file.")
+        
+        try:
+            text = self._clean(text)
+        except: raise Exception("Error cleaning the text.")
+        return "claened text"

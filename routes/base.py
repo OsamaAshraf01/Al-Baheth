@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from helpers.config import get_settings, Settings
 from routes.upload import upload_route
+from controllers.ProcessingController import ProcessingController
 
 base_router = APIRouter(
     prefix='/api/v1',
@@ -22,3 +23,7 @@ async def welcome(app_settings: Settings = Depends(get_settings)):
         "allowed_types": allowed_files,
         "max_size": str(max_size) + "Mb"
     }
+
+@base_router.get('/Preprocess/{file_name}')
+async def preprocess(file_name: str, controller: ProcessingController = Depends()):
+    return await controller.preprocess(file_name)

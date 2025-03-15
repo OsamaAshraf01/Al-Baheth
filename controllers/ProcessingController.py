@@ -19,9 +19,12 @@ class ProcessingController(BaseController):
     def get_file_extension(self, file_name):
         return os.path.splitext(file_name)[-1]
     
+    def _get_file_path(self, file_name):
+        return os.path.join(self.files_dir, file_name)
+    
     def get_file_loader(self, file_name):
         file_extension = self.get_file_extension(file_name)
-        file_path = os.path.join(self.files_dir, file_name)
+        file_path = self._get_file_path(file_name)
 
         if not os.path.exists(file_path):
             return None
@@ -46,13 +49,14 @@ class ProcessingController(BaseController):
         
         return loader.load()
     
-    def _read(self, file_path: str) -> str:
+    def _read(self, file_name: str) -> str:
         """
         Read the PDF file and extract text content.
         
         :param: file_path: Path to the PDF file.
         :return: Text content of the PDF file.
         """
+        file_path = self._get_file_path(file_name)
         text = self.PDFReaderService.read(file_path)
         return text
     

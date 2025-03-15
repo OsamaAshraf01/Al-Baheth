@@ -64,6 +64,17 @@ class ProcessingController(BaseController):
         
         return loader.load()
     
+    def paginate(self, text: str, page_size: int = 1000) -> list:
+        """
+        Paginate the text content.
+        
+        :param text: Text content to be paginated.
+        :param page_size: Tokens count per page.
+        :return: List of paginated text content.
+        """
+        tokens = word_tokenize(text)
+        return [" ".join(tokens[i:i + page_size]) for i in range(0, len(tokens), page_size)] 
+    
     def _read(self, file_name: str) -> str:
         """
         Read the PDF file and extract text content.

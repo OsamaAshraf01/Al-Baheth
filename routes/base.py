@@ -1,10 +1,13 @@
 from fastapi import APIRouter, Depends
 from helpers.config import get_settings, Settings
+from routes.upload import upload_route
 
 base_router = APIRouter(
     prefix='/api/v1',
     tags=["api_v1", "base"]
 )
+
+base_router.include_router(upload_route)
 
 @base_router.get('/')
 async def welcome(app_settings: Settings = Depends(get_settings)):

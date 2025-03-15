@@ -4,16 +4,25 @@ import os, re
 from models.enums import ProcessingEnum
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from helpers import AssertExistence, execution_manager
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.corpus import wordnet
 from dependencies import getPDFReaderService
 from services.PDF import PDFReaderService
+from fastapi.responses import JSONResponse
+from fastapi import status
 
 
 class ProcessingController(BaseController):
-    
+    # Static Attributes
+    lemmatizer = WordNetLemmatizer()
+    stemmer = PorterStemmer()
+    stop_words = set(stopwords.words('english'))
+
     def __init__(self, PDFReaderService: PDFReaderService = Depends(getPDFReaderService)):
+        super().__init__()
         self.PDFReaderService = PDFReaderService
     
     def get_file_extension(self, file_name):
@@ -45,7 +54,13 @@ class ProcessingController(BaseController):
     def get_file_content(self, file_name):
         loader = self.get_file_loader(file_name)
         
-        AssertExistence(loader)
+        if loader is None:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={
+                    "message": f"File {file_name} not found!"
+                }
+            )
         
         return loader.load()
     
@@ -60,7 +75,7 @@ class ProcessingController(BaseController):
         text = self.PDFReaderService.read(file_path)
         return text
     
-    def _clean(self, text: str, stemmer = Depends(PorterStemmer)) -> str:
+    def _clean(self, text: str) -> str:
         """
         Clean the extracted text.
         
@@ -68,13 +83,35 @@ class ProcessingController(BaseController):
         :return: Cleaned text.
         """
 
-        tokens = word_tokenize(text)
-
+        # Normalization
         text = text.lower()
         text = re.sub("[^a-z ]+", " ", text).strip()
+        text = re.sub("\s+", " ", text).strip()
 
-        stop_words = set(stopwords.words('english'))
-        processed_tokens = [stemmer.stem(word) for word in tokens if word not in stop_words]
+        # Tokenization
+        tokens = word_tokenize(text)
+
+        # Stopwords removal
+        tokens = [token for token in tokens if token not in self.stop_words]
+
+        # Lemmatization by POS(Part of Speech) tagging
+        def get_wordnet_pos(treebank_tag):
+            if treebank_tag.startswith('J'):
+                return wordnet.ADJ
+            elif treebank_tag.startswith('V'):
+                return wordnet.VERB
+            elif treebank_tag.startswith('N'):
+                return wordnet.NOUN
+            elif treebank_tag.startswith('R'):
+                return wordnet.ADV
+            else:
+                return wordnet.NOUN
+        
+        pos_tags = nltk.pos_tag(tokens)
+        processed_tokens = [self.lemmatizer.lemmatize(token, get_wordnet_pos(pos)) for token, pos in pos_tags]  
+        
+        # Stemming
+        processed_tokens = [self.stemmer.stem(word) for word in processed_tokens]
 
         return ' '.join(processed_tokens)
     
@@ -87,9 +124,17 @@ class ProcessingController(BaseController):
         """
         try:
             text = self._read(file_name)
-        except: raise Exception("Error reading the PDF file.")
+        except:
+            raise Exception("Error reading the PDF file.")
         
         try:
             text = self._clean(text)
-        except: raise Exception("Error cleaning the text.")
-        return "claened text"
+        except: 
+            raise Exception("Error cleaning the text.")
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "message": f"Text of file {file_name} has been preprocessed successfully!", 
+            }
+        )
+    

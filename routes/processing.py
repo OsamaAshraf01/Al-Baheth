@@ -32,6 +32,7 @@ async def preprocess(file_name: str):
     
     pages = controller.paginate(content)
     cleaned = {f"page {i}" : controller._clean(pages[i]) for i in range(len(pages))}
+    
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={

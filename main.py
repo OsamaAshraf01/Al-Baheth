@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import base, upload, processing, index
+from routes import base_router, upload_router, processing_router, indexing_router
 from nltk import download
 download('stopwords')
 download('wordnet')
@@ -10,8 +10,8 @@ download('averaged_perceptron_tagger_eng')
 
 
 app = FastAPI()
-app.include_router(base.base_router)
-app.include_router(upload.upload_router)
-app.include_router(processing.processing_router)
-app.include_router(index.indexing_router)
+app.include_router(base_router)
+app.include_router(upload_router)
+app.include_router(processing_router)
+app.include_router(indexing_router)
 

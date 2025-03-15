@@ -58,9 +58,8 @@ class IndexingController(BaseController):
                 'docno': file_name,
                 'text': preprocessed_text
             })
-        docs = pd.DataFrame(docs)
 
-        index_ref = indexer.index(docs['text'], docs['docno'])
+        index_ref = indexer.index(docs)
         return index_ref
 
     def index_all_files(self):

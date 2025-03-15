@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from controllers.UploadController import uploadController, UploadFile, File
+from controllers.UploadController import UploadController, UploadFile, File
 
 upload_route = APIRouter(
     prefix= "/upload",
@@ -7,5 +7,5 @@ upload_route = APIRouter(
 )
 
 @upload_route.post("/")
-async def upload(file : UploadFile = File(...), controller : uploadController = Depends()):
+async def upload(file : UploadFile = File(...), controller : UploadController = Depends()):
     return await controller.upload(file)

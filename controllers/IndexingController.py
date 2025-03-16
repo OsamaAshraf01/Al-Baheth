@@ -5,7 +5,6 @@ import os
 import pyterrier as pt
 import requests
 from .BaseController import BaseController
-import pandas as pd
 from .ProcessingController import ProcessingController
 
 class IndexingController(BaseController):

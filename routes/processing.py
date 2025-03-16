@@ -29,7 +29,12 @@ async def parse(file_name: str):
 async def preprocess(file_name: str):
     controller = ProcessingController()
     content = await parse(file_name)
+    return controller._clean(content)
     
+@processing_router.post('/paginate/{file_name}')
+async def paginate(file_name: str):
+    content = await preprocess(file_name)
+    controller = ProcessingController()
     pages = controller.paginate(content)
     cleaned = {f"page {i}" : controller._clean(pages[i]) for i in range(len(pages))}
     

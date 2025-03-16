@@ -18,6 +18,10 @@ def get_info():
         }
     )
 
+@processing_router.get('/read/{file_name}')
+async def read(file_name: str, controller: ProcessingController = Depends()):
+    return controller._read(file_name)
+
 @processing_router.get('/parse/{file_name}')
 async def parse(file_name: str):
     controller = ProcessingController()

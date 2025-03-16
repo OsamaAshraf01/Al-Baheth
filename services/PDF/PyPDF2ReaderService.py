@@ -1,4 +1,4 @@
-from PDF import PDFReaderService
+from services.PDF import PDFReaderService
 import PyPDF2
 
 class PyPDF2ReaderService(PDFReaderService):

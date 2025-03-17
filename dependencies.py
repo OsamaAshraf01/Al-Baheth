@@ -1,6 +1,5 @@
 from fastapi import Depends, HTTPException
-import services
-from services.PDF import PDFReaderService
+from services import PDFReaderService
 from helpers.config import get_settings, Settings
 from services.PDF import PyPDF2ReaderService
 

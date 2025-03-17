@@ -1,4 +1,4 @@
-from .BaseController import BaseController
+from controllers import BaseController
 from fastapi import Depends
 import os, re
 from models.enums import ProcessingEnum
@@ -10,7 +10,7 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.corpus import wordnet
 from dependencies import getPDFReaderService
-from services.PDF import PDFReaderService
+from services import PDFReaderService
 from fastapi.responses import JSONResponse
 from fastapi import status
 

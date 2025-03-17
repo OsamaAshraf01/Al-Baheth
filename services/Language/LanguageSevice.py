@@ -49,13 +49,13 @@ class LanguageService(ABC):
         pass
     
     @abstractmethod
-    def lemmatize(self, tokens) -> list[str]:
+    def lemmatize(self, tokens : list[str]) -> list[str]:
         """
         Lemmatizes a list of tokens using their part-of-speech tags.
 
-        This method first tags each token with its corresponding part-of-speech (POS) 
-        using the NLTK library. It then applies lemmatization to each token based on 
-        its POS tag, which helps in reducing words to their base or dictionary form.
+        This method first tags each token with its corresponding part-of-speech (POS). 
+        It then applies lemmatization to each token based on its POS tag,
+        which helps in reducing words to their base or dictionary form.
 
         Args:
             tokens (list[str]): A list of tokens (words) to be lemmatized.

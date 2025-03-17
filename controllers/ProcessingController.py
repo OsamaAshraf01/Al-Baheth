@@ -9,21 +9,23 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.corpus import wordnet
-from dependencies import getPDFReaderService
-from services import PDFReaderService
+from dependencies import getPDFReaderService, getLanguageService
+from services import PDFReaderService, LanguageService
 from fastapi.responses import JSONResponse
 from fastapi import status
 
 
 class ProcessingController(BaseController):
-    # Static Attributes
-    lemmatizer = WordNetLemmatizer()
-    stemmer = PorterStemmer()
-    stop_words = set(stopwords.words('english'))
-
-    def __init__(self, PDFReaderService: PDFReaderService = Depends(getPDFReaderService)):
+    
+    def __init__(
+        self, 
+        PDFReaderService: PDFReaderService = Depends(getPDFReaderService), 
+        LanguageService: LanguageService = Depends(getLanguageService)
+        ):
+        
         super().__init__()
         self.PDFReaderService = PDFReaderService
+        self.LanguageService = LanguageService
     
     def get_file_extension(self, file_name):
         return os.path.splitext(file_name)[-1]
@@ -72,7 +74,7 @@ class ProcessingController(BaseController):
         :param page_size: Tokens count per page.
         :return: List of paginated text content.
         """
-        tokens = word_tokenize(text)
+        tokens = self.LanguageService.tokenize(text)
         return [" ".join(tokens[i:i + page_size]) for i in range(0, len(tokens), page_size)] 
     
     def _read(self, file_name: str) -> str:
@@ -95,34 +97,18 @@ class ProcessingController(BaseController):
         """
 
         # Normalization
-        text = text.lower()
-        text = re.sub("[^a-z ]+", " ", text).strip()
-        text = re.sub("\s+", " ", text).strip()
+        text = self.LanguageService.normalize(text)
 
         # Tokenization
-        tokens = word_tokenize(text)
+        tokens = self.LanguageService.tokenize(text)
 
         # Stopwords removal
-        tokens = [token for token in tokens if token not in self.stop_words]
+        tokens = self.LanguageService.remove_stopwords(tokens)
 
-        # Lemmatization by POS(Part of Speech) tagging
-        def get_wordnet_pos(treebank_tag):
-            if treebank_tag.startswith('J'):
-                return wordnet.ADJ
-            elif treebank_tag.startswith('V'):
-                return wordnet.VERB
-            elif treebank_tag.startswith('N'):
-                return wordnet.NOUN
-            elif treebank_tag.startswith('R'):
-                return wordnet.ADV
-            else:
-                return wordnet.NOUN
-        
-        pos_tags = nltk.pos_tag(tokens)
-        processed_tokens = [self.lemmatizer.lemmatize(token, get_wordnet_pos(pos)) for token, pos in pos_tags]  
+        processed_tokens = self.LanguageService.lemmatize(tokens)  
         
         # Stemming
-        processed_tokens = [self.stemmer.stem(word) for word in processed_tokens]
+        processed_tokens = self.LanguageService.stem(processed_tokens)
 
         return ' '.join(processed_tokens)
     

@@ -15,11 +15,13 @@ download_nltk_data()
 with open("requirements.txt") as f:
     REQUIREMENTS_TXT = f.read().splitlines()
 
+APP_VERSION = get_settings().APP_VERSION
+
 setup(
     name= "Al-Baheth",
     packages= find_packages(),
     install_requires= REQUIREMENTS_TXT,
-    version= get_settings().APP_VERSION,
+    version= APP_VERSION,
     include_package_data=True,
     url="https://github.com/OsamaAshraf01/Al-Baheth",
 )

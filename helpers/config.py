@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     FILE_MAX_SIZE: int
     FILE_DEFAULT_CHUNK_SIZE: int
     PDF_READER : str
+    LANGUAGE_PROCESSOR : str
 
     
     model_config = {

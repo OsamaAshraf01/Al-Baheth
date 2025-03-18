@@ -6,6 +6,6 @@ indexing_router = APIRouter(
     tags= ["api_v1", "indexing"]
 )
 
-@indexing_router.get('/index')
+@indexing_router.post('/index')
 async def index_files(controller: IndexingController = Depends()):
-    return controller.index_all_files()
+    return controller.index()

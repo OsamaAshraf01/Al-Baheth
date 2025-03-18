@@ -43,7 +43,7 @@ class IndexingController(BaseController):
     
             return controller._clean(content)
 
-    def _index_files(self, file_names: list):
+    def _index(self, file_names: list):
         """
         Index the preprocessed files using PyTerrier.
         
@@ -61,7 +61,7 @@ class IndexingController(BaseController):
         index_ref = indexer.index(docs)
         return index_ref
 
-    def index_all_files(self):
+    def index(self):
         """
         Index all files in the assets folder.
         """
@@ -73,7 +73,7 @@ class IndexingController(BaseController):
             )
         
         try:
-            index_ref = self._index_files(file_names)
+            index_ref = self._index(file_names)
             return JSONResponse(
                 status_code=status.HTTP_200_OK,
                 content={"message": "Files indexed successfully.", "index_ref": str(index_ref)}

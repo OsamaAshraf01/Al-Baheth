@@ -18,21 +18,16 @@ def get_info():
     )
 
 @processing_router.get('/parse/{file_name}')
-async def parse(file_name: str):
-    controller = ProcessingController()
-    content = controller.get_file_content(file_name)
-    content = "\n".join([doc.page_content for doc in content])
-    return content
+async def parse(file_name: str, controller : ProcessingController = Depends()):
+    return controller.parse(file_name)
 
 @processing_router.get('/preprocess/{file_name}')
 async def preprocess(file_name: str, controller : ProcessingController = Depends()):
-    content = await parse(file_name)
-    return controller._clean(content)
+    return controller.preprocess(file_name)
     
 @processing_router.post('/paginate/{file_name}')
-async def paginate(file_name: str):
-    content = await preprocess(file_name)
-    controller = ProcessingController()
+async def paginate(file_name: str, controller : ProcessingController = Depends()):
+    content = controller.preprocess(file_name)
     pages = controller.paginate(content)
     cleaned = {f"page {i}" : controller._clean(pages[i]) for i in range(len(pages))}
     

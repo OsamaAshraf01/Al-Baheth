@@ -129,4 +129,38 @@ class ProcessingController(BaseController):
                 "message": f"Text of file {file_name} has been preprocessed successfully!", 
             }
         )
+    def parse(self, file_name: str) -> str:
+        """
+        Parses the content of a file and returns it as a single string.
+
+        This method retrieves the content of the specified file, extracts the 
+        page content from each document, and joins them into a single string 
+        separated by newline characters.
+
+        Args:
+            file_name (str): The name of the file to be parsed.
+
+        Returns:
+            str: The combined content of the file as a single string.
+        """
+        content = self.get_file_content(file_name)
+        content = "\n".join([doc.page_content for doc in content])
+        return content
     
+    def preprocess(self, file_name: str) -> str:
+        """
+        Preprocesses the content of a specified file by parsing it and 
+        cleaning the parsed content.
+
+        This method first retrieves the content of the file using the 
+        `parse` method, and then applies the `_clean` method to the 
+        parsed content to prepare it for further processing.
+
+        Args:
+            file_name (str): The name of the file to be preprocessed.
+
+        Returns:
+            str: The cleaned content of the file as a single string.
+        """
+        content = self.parse(file_name)
+        return self._clean(content)

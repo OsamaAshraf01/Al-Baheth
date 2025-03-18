@@ -15,9 +15,9 @@ class PyPDF2ReaderService(PDFReaderService):
         """
         text = ""
         
-        # with open(file_path, "rb") as f:
-        #     reader = PyPDF2.PdfReader(f)
-        #     for page in reader.pages:
-        #         text += page.extract_text()
+        with open(file_path, "rb") as f:
+            reader = PyPDF2.PdfReader(f)
+            for page in reader.pages:
+                text += page.extract_text()
         
         return text

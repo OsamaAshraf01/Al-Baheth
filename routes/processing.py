@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from helpers.config import get_settings, Settings
 from controllers import ProcessingController
 from fastapi.responses import JSONResponse
 from fastapi import status
@@ -19,19 +18,19 @@ def get_info():
     )
 
 @processing_router.get('/parse/{file_name}')
-async def parse(file_name: str):
-    controller = ProcessingController()
-    content = controller.get_file_content(file_name)
-    content = "\n".join([doc.page_content for doc in content])
-    return content
+async def parse(file_name: str, controller : ProcessingController = Depends()):
+    return controller.parse(file_name)
 
 @processing_router.get('/preprocess/{file_name}')
-async def preprocess(file_name: str):
-    controller = ProcessingController()
-    content = await parse(file_name)
+async def preprocess(file_name: str, controller : ProcessingController = Depends()):
+    return controller.preprocess(file_name)
     
+@processing_router.post('/paginate/{file_name}')
+async def paginate(file_name: str, controller : ProcessingController = Depends()):
+    content = controller.preprocess(file_name)
     pages = controller.paginate(content)
     cleaned = {f"page {i}" : controller._clean(pages[i]) for i in range(len(pages))}
+    
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={

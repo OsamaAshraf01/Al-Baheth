@@ -23,13 +23,28 @@ class IndexingController(BaseController):
         :param file_name: Name of the file to preprocess.
         :return: Preprocessed text content.
         """
+
         response = requests.get(f"http://localhost:5000/api/v1/processing/preprocess/{file_name}")
         print(response.json().get("Processed Text", ""))
+        
         if response.status_code != status.HTTP_200_OK:
-            raise HTTPException(status_code=response.status_code, detail=response.json())
+           raise HTTPException(status_code=response.status_code, detail=response.json())
         return response.json().get("Processed Text", "")
 
-    def _index_files(self, file_names: list):
+
+    async def parse(file_name: str):
+        controller = ProcessingController()
+        content = controller.get_file_content(file_name)
+        content = "\n".join([doc.page_content for doc in content])
+        return content
+
+    async def _process_file(self, file_name: str) -> str:
+            controller = ProcessingController()
+            content = await self.parse(file_name)
+    
+            return controller._clean(content)
+
+    def _index(self, file_names: list):
         """
         Index the preprocessed files using PyTerrier.
         
@@ -38,15 +53,16 @@ class IndexingController(BaseController):
         indexer = pt.IterDictIndexer(self.index_dir, overwrite=True)
         docs = []
         for file_name in file_names:
-            preprocessed_text = self._preprocess_file(file_name)
+            preprocessed_text = self._process_file(file_name)
             docs.append({
                 'docno': file_name,
                 'text': preprocessed_text
             })
+
         index_ref = indexer.index(docs)
         return index_ref
 
-    def index_all_files(self):
+    def index(self):
         """
         Index all files in the assets folder.
         """
@@ -58,7 +74,7 @@ class IndexingController(BaseController):
             )
         
         try:
-            index_ref = self._index_files(file_names)
+            index_ref = self._index(file_names)
             return JSONResponse(
                 status_code=status.HTTP_200_OK,
                 content={"message": "Files indexed successfully.", "index_ref": str(index_ref)}

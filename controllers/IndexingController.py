@@ -5,11 +5,12 @@ import os
 import pyterrier as pt
 import requests
 from .BaseController import BaseController
+from .ProcessingController import ProcessingController
 
 class IndexingController(BaseController):
     def __init__(self):
         super().__init__()
-        self.index_dir = os.path.join(self.files_dir, "index")
+        self.index_dir = os.path.join(self.base_dir, "index")
         if not pt.java.started():
             pt.java.init()
 

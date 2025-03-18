@@ -25,7 +25,7 @@ async def parse(file_name: str, controller : ProcessingController = Depends()):
 async def preprocess(file_name: str, controller : ProcessingController = Depends()):
     return controller.preprocess(file_name)
     
-@processing_router.post('/paginate/{file_name}')
+@processing_router.get('/paginate/{file_name}')
 async def paginate(file_name: str, controller : ProcessingController = Depends()):
     content = controller.preprocess(file_name)
     pages = controller.paginate(content)

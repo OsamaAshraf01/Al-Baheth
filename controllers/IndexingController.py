@@ -33,7 +33,7 @@ class IndexingController(BaseController):
         return response.json().get("Processed Text", "")
 
 
-    async def parse(file_name: str):
+    async def parse(self, file_name: str):
         controller = ProcessingController()
         content = controller.get_file_content(file_name)
         content = "\n".join([doc.page_content for doc in content])

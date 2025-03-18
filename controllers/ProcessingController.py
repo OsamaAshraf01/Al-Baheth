@@ -1,14 +1,9 @@
 from controllers import BaseController
 from fastapi import Depends
-import os, re
+import os
 from models.enums import ProcessingEnum
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
-from helpers import AssertExistence, execution_manager
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-from nltk.corpus import wordnet
+from helpers import execution_manager
 from dependencies import getPDFReaderService, getLanguageService
 from services import PDFReaderService, LanguageService
 from fastapi.responses import JSONResponse

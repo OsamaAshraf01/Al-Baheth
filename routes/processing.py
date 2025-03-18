@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from helpers.config import get_settings, Settings
 from controllers import ProcessingController
 from fastapi.responses import JSONResponse
 from fastapi import status
@@ -26,8 +25,7 @@ async def parse(file_name: str):
     return content
 
 @processing_router.get('/preprocess/{file_name}')
-async def preprocess(file_name: str):
-    controller = ProcessingController()
+async def preprocess(file_name: str, controller : ProcessingController = Depends()):
     content = await parse(file_name)
     return controller._clean(content)
     

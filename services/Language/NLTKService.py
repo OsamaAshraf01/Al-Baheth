@@ -1,11 +1,10 @@
 from .LanguageSevice import LanguageService
-from fastapi import Depends
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.corpus import wordnet
-from typing import Literal
+from typing import Literal, List
 
 class NLTKService(LanguageService):
     
@@ -17,7 +16,7 @@ class NLTKService(LanguageService):
     def __init__(self):
         super().__init__()
     
-    def tokenize(self, text: str) -> list[str]:
+    def tokenize(self, text: str) -> List[str]:
         """
         Tokenizes the input text into individual words.
 
@@ -25,19 +24,19 @@ class NLTKService(LanguageService):
             text (str): The input string to be tokenized.
 
         Returns:
-            list[str]: A list of words extracted from the input text.
+            List[str]: A List of words extracted from the input text.
         """
-        return word_tokenize(self, text)
+        return word_tokenize(text)
     
-    def remove_stopwords(self, tokens: list[str]) -> list[str]:
+    def remove_stopwords(self, tokens: List[str]) -> List[str]:
         """
-        Remove stopwords from a list of tokens.
+        Remove stopwords from a List of tokens.
 
         Args:
-            tokens (list[str]): A list of tokens (words) from which stopwords need to be removed.
+            tokens (List[str]): A List of tokens (words) from which stopwords need to be removed.
 
         Returns:
-            list[str]: A new list containing only the tokens that are not stopwords.
+            List[str]: A new List containing only the tokens that are not stopwords.
         """
         return [token for token in tokens if token not in self.stop_words]
     
@@ -70,33 +69,33 @@ class NLTKService(LanguageService):
         else:
             return wordnet.NOUN
         
-    def lemmatize(self, tokens) -> list[str]:
+    def lemmatize(self, tokens) -> List[str]:
         """
-        Lemmatizes a list of tokens using their part-of-speech tags.
+        Lemmatizes a List of tokens using their part-of-speech tags.
 
         This method first tags each token with its corresponding part-of-speech (POS) 
         using the NLTK library. It then applies lemmatization to each token based on 
         its POS tag, which helps in reducing words to their base or dictionary form.
 
         Args:
-            tokens (list[str]): A list of tokens (words) to be lemmatized.
+            tokens (List[str]): A List of tokens (words) to be lemmatized.
 
         Returns:
-            list[str]: A list of lemmatized tokens.
+            List[str]: A List of lemmatized tokens.
         """
         pos_tags = nltk.pos_tag(tokens)
         processed_tokens = [self.lemmatizer.lemmatize(token, self.get_wordnet_pos(pos)) for token, pos in pos_tags]  
         return processed_tokens
     
-    def stem(self, tokens) -> list[str]:
+    def stem(self, tokens) -> List[str]:
         """
-        Stems a list of tokens using the configured stemmer.
+        Stems a List of tokens using the configured stemmer.
 
         Args:
-            tokens (list[str]): A list of words (tokens) to be stemmed.
+            tokens (List[str]): A List of words (tokens) to be stemmed.
 
         Returns:
-            list[str]: A list of stemmed words.
+            List[str]: A List of stemmed words.
         """
         return [self.stemmer.stem(word) for word in tokens]
     

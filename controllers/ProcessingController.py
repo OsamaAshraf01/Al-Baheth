@@ -6,7 +6,7 @@ from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx
 from helpers import execution_manager
 from dependencies import getPDFReaderService, getLanguageService
 from services import PDFReaderService, LanguageService
-from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 from fastapi import status
 
 
@@ -52,9 +52,9 @@ class ProcessingController(BaseController):
         loader = self.get_file_loader(file_name)
         
         if loader is None:
-            return JSONResponse(
+            raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                content={
+                detail={
                     "message": f"File {file_name} not found!"
                 }
             )

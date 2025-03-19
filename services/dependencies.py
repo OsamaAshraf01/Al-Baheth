@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from helpers import Settings
 from services.PDF import PDFReaderService, PyPDF2ReaderService
 from services.Language import LanguageProcessingService, NLTKService
+from models.enums import PDFEnum, LanguageProcessingEnum
 
 def getPDFReaderService(settings: Settings) -> PDFReaderService:
     """
@@ -9,7 +10,7 @@ def getPDFReaderService(settings: Settings) -> PDFReaderService:
     
     :return: Instance of the PDF reader service based on .env file.
     """
-    if settings.PDF_READER == "PyPDF2":
+    if settings.PDF_READER == PDFEnum.PyPDF2.value:
         return PyPDF2ReaderService()
     
     raise HTTPException(
@@ -18,7 +19,7 @@ def getPDFReaderService(settings: Settings) -> PDFReaderService:
     )
     
 def getLanguageProcessingService(settings: Settings) -> LanguageProcessingService:
-    if settings.LANGUAGE_PROCESSOR == "NLTK":
+    if settings.LANGUAGE_PROCESSOR == LanguageProcessingEnum.NLTK.value:
         return NLTKService()
     
     raise HTTPException(

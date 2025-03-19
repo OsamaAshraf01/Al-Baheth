@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     FILE_ALLOWED_TYPES: list
     FILE_MAX_SIZE: int
     FILE_DEFAULT_CHUNK_SIZE: int
-    PDF_READER : str
-    LANGUAGE_PROCESSOR : str
+    PDF_READER : int
+    LANGUAGE_PROCESSOR : int
 
     
     model_config = {

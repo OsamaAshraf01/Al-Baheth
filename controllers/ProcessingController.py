@@ -2,7 +2,7 @@ from controllers import BaseController
 from models.enums import ProcessingEnum
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from helpers import execution_manager
-from dependencies import getPDFReaderService, getLanguageService
+from services.dependencies import getPDFReaderService, getLanguageService
 from services import PDFReaderService, LanguageService
 from fastapi import HTTPException, status, Depends
 from fastapi.responses import JSONResponse

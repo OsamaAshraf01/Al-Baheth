@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import re
 from typing import List
 
-class LanguageService(ABC):
+class LanguageProcessingService(ABC):
     
     def normalize(self, text: str) -> str:
         """

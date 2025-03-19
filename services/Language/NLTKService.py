@@ -1,4 +1,4 @@
-from .LanguageSevice import LanguageService
+from .LanguageSevice import LanguageProcessingService
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -6,7 +6,7 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.corpus import wordnet
 from typing import Literal, List
 
-class NLTKService(LanguageService):
+class NLTKService(LanguageProcessingService):
     
     # Static Attributes
     lemmatizer = WordNetLemmatizer()

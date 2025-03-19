@@ -2,7 +2,7 @@ from controllers import BaseController
 from models.enums import ProcessingEnum
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from helpers import execution_manager
-from services import PDFReaderService, LanguageService
+from services import PDFReaderService, LanguageProcessingService
 from fastapi import HTTPException, status
 from fastapi.responses import JSONResponse
 import os
@@ -13,12 +13,12 @@ class ProcessingController(BaseController):
     def __init__(
         self, 
         PDFReaderService: PDFReaderService, 
-        LanguageService: LanguageService
+        LanguageProcessingService: LanguageProcessingService
         ):
         
         super().__init__()
         self.PDFReaderService = PDFReaderService
-        self.LanguageService = LanguageService
+        self.LanguageProcessingService = LanguageProcessingService
     
     def get_file_extension(self, file_name):
         return os.path.splitext(file_name)[-1]
@@ -67,7 +67,7 @@ class ProcessingController(BaseController):
         :param page_size: Tokens count per page.
         :return: List of paginated text content.
         """
-        tokens = self.LanguageService.tokenize(text)
+        tokens = self.LanguageProcessingService.tokenize(text)
         return [" ".join(tokens[i:i + page_size]) for i in range(0, len(tokens), page_size)] 
     
     def _read(self, file_name: str) -> str:
@@ -90,18 +90,18 @@ class ProcessingController(BaseController):
         """
 
         # Normalization
-        text = self.LanguageService.normalize(text)
+        text = self.LanguageProcessingService.normalize(text)
 
         # Tokenization
-        tokens = self.LanguageService.tokenize(text)
+        tokens = self.LanguageProcessingService.tokenize(text)
 
         # Stopwords removal
-        tokens = self.LanguageService.remove_stopwords(tokens)
+        tokens = self.LanguageProcessingService.remove_stopwords(tokens)
 
-        processed_tokens = self.LanguageService.lemmatize(tokens)  
+        processed_tokens = self.LanguageProcessingService.lemmatize(tokens)  
         
         # Stemming
-        processed_tokens = self.LanguageService.stem(processed_tokens)
+        processed_tokens = self.LanguageProcessingService.stem(processed_tokens)
 
         return ' '.join(processed_tokens)
     

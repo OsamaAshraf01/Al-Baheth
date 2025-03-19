@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from helpers import Settings
 from services.PDF import PDFReaderService, PyPDF2ReaderService
-from services.Language import LanguageService, NLTKService
+from services.Language import LanguageProcessingService, NLTKService
 
 def getPDFReaderService(settings: Settings) -> PDFReaderService:
     """
@@ -17,7 +17,7 @@ def getPDFReaderService(settings: Settings) -> PDFReaderService:
         detail="PDF Reader service not found"
     )
     
-def getLanguageService(settings: Settings) -> LanguageService:
+def getLanguageProcessingService(settings: Settings) -> LanguageProcessingService:
     if settings.LANGUAGE_PROCESSOR == "NLTK":
         return NLTKService()
     

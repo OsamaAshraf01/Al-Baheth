@@ -1,2 +1,2 @@
-from .LanguageSevice import LanguageService
+from .LanguageSevice import LanguageProcessingService
 from .NLTKService import NLTKService

@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     FILE_DEFAULT_CHUNK_SIZE: int
     PDF_READER : int
     LANGUAGE_PROCESSOR : int
+    FILE_SERVICE : int
 
     
     model_config = {

@@ -2,7 +2,9 @@ from fastapi import HTTPException
 from helpers import Settings
 from services.PDF import PDFReaderService, PyPDF2ReaderService
 from services.Language import LanguageProcessingService, NLTKService
-from models.enums import PDFEnum, LanguageProcessingEnum
+from services.File import FileService, LongChainService
+from models.enums import PDFEnum, LanguageProcessingEnum, FileEnum
+
 
 def getPDFReaderService(settings: Settings) -> PDFReaderService:
     """
@@ -37,4 +39,25 @@ def getLanguageProcessingService(settings: Settings) -> LanguageProcessingServic
     raise HTTPException(
         status_code=404,
         detail="Language processor service not found"
+    )
+    
+def getFileService(settings: Settings) -> FileService:
+    """
+    Retrieves the appropriate file service based on the provided settings.
+
+    Args:
+        settings (Settings): The settings object containing configuration for the file service.
+
+    Returns:
+        FileService: An instance of the selected file service.
+
+    Raises:
+        HTTPException: If the specified file service is not found in the settings.
+    """
+    if settings.FILE_SERVICE == FileEnum.LongChain.value:
+        return LongChainService()
+    
+    raise HTTPException(
+        status_code=404,
+        detail="File service not found"
     )

@@ -1,6 +1,7 @@
 from .FileService import FileService
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from models.enums import ProcessingEnum
+from services import DirectoryService
 import os
 class LongChainService(FileService):
     
@@ -9,7 +10,7 @@ class LongChainService(FileService):
         return os.path.splitext(file_name)[-1]
     
     def _get_file_path(self, file_name):
-        return os.path.join(self.files_dir, file_name)
+        return os.path.join(DirectoryService.files_dir, file_name)
     
     def load(self, file_name):
         file_extension = self._get_extension(file_name)

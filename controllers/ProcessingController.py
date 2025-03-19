@@ -1,10 +1,7 @@
 from controllers import BaseController
-from models.enums import ProcessingEnum
-from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from helpers import execution_manager
-from services import PDFReaderService, LanguageProcessingService
+from services import PDFReaderService, LanguageProcessingService, FileService
 from fastapi import HTTPException, status
-import os
 
 
 class ProcessingController(BaseController):
@@ -12,41 +9,19 @@ class ProcessingController(BaseController):
     def __init__(
         self, 
         PDFReaderService: PDFReaderService, 
-        LanguageProcessingService: LanguageProcessingService
+        LanguageProcessingService: LanguageProcessingService,
+        FileService: FileService
+        
         ):
         
         super().__init__()
         self.PDFReaderService = PDFReaderService
         self.LanguageProcessingService = LanguageProcessingService
-    
-    def get_file_extension(self, file_name):
-        return os.path.splitext(file_name)[-1]
-    
-    def _get_file_path(self, file_name):
-        return os.path.join(self.files_dir, file_name)
-    
-    def get_file_loader(self, file_name):
-        file_extension = self.get_file_extension(file_name)
-        file_path = self._get_file_path(file_name)
-
-        if not os.path.exists(file_path):
-            return None
-        
-        if file_extension == ProcessingEnum.TXT.value:
-            return TextLoader(file_path, encoding="utf-8")
-        elif file_extension == ProcessingEnum.PDF.value:
-            return PyMuPDFLoader(file_path)
-        elif file_extension == ProcessingEnum.DOCX.value:
-            return Docx2txtLoader(file_path)
-        elif file_extension == ProcessingEnum.PPTX.value:
-            return UnstructuredPowerPointLoader(file_path)
-        
-        return None
-    
+        self.FileService = FileService
 
     @execution_manager
-    def get_file_content(self, file_name):
-        loader = self.get_file_loader(file_name)
+    def load(self, file_name):
+        loader= self.FileService.load(file_name)
         
         if loader is None:
             raise HTTPException(
@@ -56,7 +31,7 @@ class ProcessingController(BaseController):
                 }
             )
         
-        return loader.load()
+        return loader.load()  # the return will be updated to be mor e generic in the future
     
     def paginate(self, text: str, page_size: int = 1000) -> list:
         """
@@ -118,7 +93,7 @@ class ProcessingController(BaseController):
         Returns:
             str: The combined content of the file as a single string.
         """
-        content = self.get_file_content(file_name)
+        content = self.load(file_name)
         content = "\n".join([doc.page_content for doc in content])
         return content
     

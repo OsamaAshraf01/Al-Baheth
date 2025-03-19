@@ -1,7 +1,7 @@
 from .FileService import FileService
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from models.enums import ProcessingEnum
-from services import DirectoryService
+from services.Directory import DirectoryService
 import os
 class LongChainService(FileService):
     

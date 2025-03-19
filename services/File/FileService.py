@@ -9,7 +9,7 @@ class FileService(ABC):
     """
 
     @abstractmethod
-    def load(self, file_name: str) -> str:
+    def load(self, file_name: str):
         """
         Reads the contents of a file.
 

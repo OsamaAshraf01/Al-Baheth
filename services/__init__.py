@@ -1,4 +1,4 @@
-from typing_extensions import Annotated
+from helpers import Annotated
 from fastapi import Depends
 from .PDF import PDFReaderService as PDFReaderServiceClass
 from .Language import LanguageService as LanguageServiceClass

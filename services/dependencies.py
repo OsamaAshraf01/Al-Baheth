@@ -1,8 +1,7 @@
 from fastapi import Depends, HTTPException
-from services import PDFReaderService, LanguageService
 from helpers.config import get_settings, Settings
-from services.PDF import PyPDF2ReaderService
-from services.Language import NLTKService
+from services.PDF import PDFReaderService, PyPDF2ReaderService
+from services.Language import LanguageService, NLTKService
 
 def getPDFReaderService(settings: Settings = Depends(get_settings)) -> PDFReaderService:
     """

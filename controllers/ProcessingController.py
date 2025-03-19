@@ -105,28 +105,6 @@ class ProcessingController(BaseController):
 
         return ' '.join(processed_tokens)
     
-    def preprocess(self, file_name: str) -> str:
-        """
-        Preprocess the PDF file and return its cleaned text content.
-        
-        :param file_name: Path to the PDF file.
-        :return: Cleaned text content of the PDF file.
-        """
-        try:
-            text = self._read(file_name)
-        except:
-            raise Exception("Error reading the PDF file.")
-        
-        try:
-            text = self._clean(text)
-        except: 
-            raise Exception("Error cleaning the text.")
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content={
-                "message": f"Text of file {file_name} has been preprocessed successfully!", 
-            }
-        )
     def parse(self, file_name: str) -> str:
         """
         Parses the content of a file and returns it as a single string.

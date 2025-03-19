@@ -1,9 +1,9 @@
-from fastapi import Depends, HTTPException
-from helpers.config import get_settings, Settings
+from fastapi import HTTPException
+from helpers import Settings
 from services.PDF import PDFReaderService, PyPDF2ReaderService
 from services.Language import LanguageService, NLTKService
 
-def getPDFReaderService(settings: Settings = Depends(get_settings)) -> PDFReaderService:
+def getPDFReaderService(settings: Settings) -> PDFReaderService:
     """
     Get the PDF reader service based on the service name.
     
@@ -17,7 +17,7 @@ def getPDFReaderService(settings: Settings = Depends(get_settings)) -> PDFReader
         detail="PDF Reader service not found"
     )
     
-def getLanguageService(settings: Settings = Depends(get_settings)) -> LanguageService:
+def getLanguageService(settings: Settings) -> LanguageService:
     if settings.LANGUAGE_PROCESSOR == "NLTK":
         return NLTKService()
     

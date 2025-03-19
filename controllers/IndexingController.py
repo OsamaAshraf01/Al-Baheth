@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import status
 import os

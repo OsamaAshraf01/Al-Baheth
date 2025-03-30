@@ -14,9 +14,6 @@ class IndexingController(BaseController):
         if not pt.java.started():
             pt.java.init()
 
-    def _get_file_path(self, file_name):
-        return os.path.join(self.files_dir, file_name)
-
     def _preprocess_file(self, file_name: str) -> str:
         """
         Preprocess a file using the /preprocess/{file_name} endpoint.

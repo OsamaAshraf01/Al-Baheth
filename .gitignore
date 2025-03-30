@@ -12,6 +12,7 @@ __pycache__/
 # Assets
 assets/
 index/
+!/services/Index/
 
 # Distribution / packaging
 .Python

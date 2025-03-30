@@ -3,7 +3,7 @@ from services import DirectoryService
 import pyterrier as pt
 import os
 
-class PyTerrierIndexingService(IndexingService):
+class PyTerrierService(IndexingService):
     
     def __init__(self):
         super().__init__()

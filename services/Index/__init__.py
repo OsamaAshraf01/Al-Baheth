@@ -1,2 +1,2 @@
 from .IndexingService import IndexingService
-from .PyTerrierIndexingService import PyTerrierIndexingService
+from .PyTerrierService import PyTerrierService

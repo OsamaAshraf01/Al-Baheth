@@ -3,7 +3,8 @@ from helpers import Settings
 from services.PDF import PDFReaderService, PyPDF2ReaderService
 from services.Language import LanguageProcessingService, NLTKService
 from services.File import FileService, LongChainService
-from models.enums import PDFEnum, LanguageProcessingEnum, FileEnum
+from services.Index import IndexingService, PyTerrierService
+from models.enums import PDFEnum, LanguageProcessingEnum, FileEnum, IndexingEnum
 
 
 def getPDFReaderService(settings: Settings) -> PDFReaderService:
@@ -60,4 +61,25 @@ def getFileService(settings: Settings) -> FileService:
     raise HTTPException(
         status_code=404,
         detail="File service not found"
+    )
+    
+def getIndexingService(settings: Settings) -> IndexingService:
+    """
+    Retrieves the appropriate indexing service based on the provided settings.
+
+    Args:
+        settings (Settings): The settings object containing configuration for the indexing service.
+
+    Returns:
+        IndexingService: An instance of the selected indexing service.
+
+    Raises:
+        HTTPException: If the specified indexing service is not found in the settings.
+    """
+    if settings.INDEXING_SERVICE == IndexingEnum.PyTerrier.value:
+        return PyTerrierService()
+    
+    raise HTTPException(
+        status_code=404,
+        detail="Indexing service not found"
     )

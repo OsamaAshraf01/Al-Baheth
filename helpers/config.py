@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     PDF_READER : int
     LANGUAGE_PROCESSOR : int
     FILE_SERVICE : int
+    INDEXING_SERVICE : int
 
     
     model_config = {

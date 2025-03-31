@@ -3,79 +3,44 @@ from fastapi.responses import JSONResponse
 from fastapi import status
 import os
 import pyterrier as pt
-import requests
+from services import IndexingService, DirectoryService
 from .BaseController import BaseController
 from .ProcessingController import ProcessingController
 
 class IndexingController(BaseController):
-    def __init__(self):
+    def __init__(self, indexing_service: IndexingService, processing_service: ProcessingController):
         super().__init__()
-        self.index_dir = os.path.join(self.base_dir, "index")
-        if not pt.java.started():
-            pt.java.init()
-
-    def _preprocess_file(self, file_name: str) -> str:
-        """
-        Preprocess a file using the /preprocess/{file_name} endpoint.
-        
-        :param file_name: Name of the file to preprocess.
-        :return: Preprocessed text content.
-        """
-
-        response = requests.get(f"http://localhost:5000/api/v1/processing/preprocess/{file_name}")
-        print(response.json().get("Processed Text", ""))
-        
-        if response.status_code != status.HTTP_200_OK:
-           raise HTTPException(status_code=response.status_code, detail=response.json())
-        return response.json().get("Processed Text", "")
-
-
-    async def parse(self, file_name: str):
-        controller = ProcessingController()
-        content = controller.get_file_content(file_name)
-        content = "\n".join([doc.page_content for doc in content])
-        return content
-
-    async def _process_file(self, file_name: str) -> str:
-            controller = ProcessingController()
-            content = await self.parse(file_name)
+        self.indexing_service = indexing_service
+        self.processing_service = processing_service
     
-            return controller._clean(content)
-
-    def _index(self, file_names: list):
+    
+    def process_files(self) -> dict:
         """
-        Index the preprocessed files using PyTerrier.
+        Process files in the assets folder and return a dictionary with docno and their processed text.
         
-        :param file_names: List of file names to index.
+        :return: Dictionary with docno and text as keys.
         """
-        indexer = pt.IterDictIndexer(self.index_dir, overwrite=True)
         docs = []
-        for file_name in file_names:
-            preprocessed_text = self._process_file(file_name)
+        for file_name in os.listdir(DirectoryService.files_dir):
+            preprocessed_text = self.processing_service.preprocess(file_name)
             docs.append({
                 'docno': file_name,
                 'text': preprocessed_text
             })
-
-        index_ref = indexer.index(docs)
-        return index_ref
-
+        
+        return docs
+    
     def index(self):
         """
-        Index all files in the assets folder.
-        """
-        file_names = [f for f in os.listdir(self.files_dir) if os.path.isfile(os.path.join(self.files_dir, f))]
-        if not file_names:
-            return JSONResponse(
-                status_code=status.HTTP_404_NOT_FOUND,
-                content={"message": "No files found in the assets folder."}
-            )
+        Index the documents in the assets folder and return the index reference.
         
+        :return: JSON response with the index reference.
+        """
         try:
-            index_ref = self._index(file_names)
-            return JSONResponse(
-                status_code=status.HTTP_200_OK,
-                content={"message": "Files indexed successfully.", "index_ref": str(index_ref)}
-            )
+            corpus = self.process_files()
+            index_ref = self.indexing_service.index(corpus)
+            return JSONResponse(status_code=status.HTTP_200_OK, content={"index_ref": index_ref})
         except Exception as e:
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+            return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"error": str(e)})
+    
+    

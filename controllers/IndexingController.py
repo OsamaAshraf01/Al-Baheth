@@ -1,14 +1,12 @@
-from fastapi import HTTPException
 from fastapi.responses import JSONResponse
-from fastapi import status
+from fastapi import status, Depends
 import os
-import pyterrier as pt
-from services import IndexingService, DirectoryService
 from .BaseController import BaseController
 from .ProcessingController import ProcessingController
+from services import IndexingService, DirectoryService
 
 class IndexingController(BaseController):
-    def __init__(self, indexing_service: IndexingService, processing_service: ProcessingController):
+    def __init__(self, indexing_service: IndexingService, processing_service: ProcessingController = Depends()):
         super().__init__()
         self.indexing_service = indexing_service
         self.processing_service = processing_service
@@ -36,11 +34,8 @@ class IndexingController(BaseController):
         
         :return: JSON response with the index reference.
         """
-        try:
-            corpus = self.process_files()
-            index_ref = self.indexing_service.index(corpus)
-            return JSONResponse(status_code=status.HTTP_200_OK, content={"index_ref": index_ref})
-        except Exception as e:
-            return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"error": str(e)})
+        corpus = self.process_files()
+        index_ref = self.indexing_service.index(corpus)
+        return JSONResponse(status_code=status.HTTP_200_OK, content="Indexing completed successfully")
     
     

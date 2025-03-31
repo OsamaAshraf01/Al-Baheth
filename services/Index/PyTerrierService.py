@@ -1,5 +1,5 @@
 from .IndexingService import IndexingService
-from services import DirectoryService
+from services.Directory import DirectoryService
 import pyterrier as pt
 import os
 
@@ -9,7 +9,7 @@ class PyTerrierService(IndexingService):
         super().__init__()
         if not pt.java.started():
             pt.init()
-        self.indexer = pt.IterDictIndexer(DirectoryService.index_dir)
+        self.indexer = pt.IterDictIndexer(DirectoryService.index_dir, meta={'docno': 200})
     
     def isExistingIndex(self) -> bool:
         """
@@ -20,4 +20,5 @@ class PyTerrierService(IndexingService):
         return os.path.exists(os.path.join(DirectoryService.index_dir, "data.properties"))
             
     def index(self, corpus: dict) -> str:
-        return self.indexer.index(corpus, append=self.isExistingIndex())
+        return self.indexer.index(corpus, append=True) if self.isExistingIndex() else self.indexer.index(corpus)
+        #return self.indexer.index(corpus)

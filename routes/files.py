@@ -1,0 +1,28 @@
+from fastapi import APIRouter, Depends, UploadFile, File, status
+from fastapi.responses import JSONResponse
+from controllers import UploadController, ProcessingController
+
+files_router = APIRouter(
+    prefix= "/api/v1/files",
+    tags= ["api_v1", "files", "uploading", "processing"]
+)
+
+@files_router.post("/upload")
+async def upload(file : UploadFile = File(...), controller : UploadController = Depends()):
+    #TODO: add a check for the file type and size
+    #TODO: add file processing after upload
+    #TODO: add assigning IDs to the files and map them to the main name using simple table
+    #TODO: Check if the file hash value already exist to avoid duplicates
+    return await controller.upload(file)
+
+@files_router.put("/{file_id}/process")
+async def process_file(file_id: str, controller: ProcessingController = Depends()):
+    content = controller.process(file_id)
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "message": "File processed successfully",
+            "content": content
+        }
+    )

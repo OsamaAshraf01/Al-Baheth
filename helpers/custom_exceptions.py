@@ -1,2 +1,0 @@
-class NoneValueException(Exception):
-    pass

@@ -1,13 +1,11 @@
 from helpers import Annotated
 from fastapi import Depends
-from .PDF import PDFReaderService as PDFReaderServiceClass
-from .Language import LanguageProcessingService as LanguageProcessingServiceClass
-from .File import FileService as FileServiceClass
-from .Index import IndexingService as IndexingServiceClass
-from .dependencies import getPDFReaderService, getLanguageProcessingService, getFileService, getIndexingService
+from .Parsing import ParsingService as ParsingServiceClass
+from .NLP import LanguageProcessingService as LanguageProcessingServiceClass
+from .Indexing import IndexingService as IndexingServiceClass
+from .dependencies import getParsingService, getLanguageProcessingService, getIndexingService
 from .Directory import DirectoryService
 
-PDFReaderService = Annotated[PDFReaderServiceClass, Depends(getPDFReaderService)]
+ParsingService = Annotated[ParsingServiceClass, Depends(getParsingService)]
 LanguageProcessingService = Annotated[LanguageProcessingServiceClass, Depends(getLanguageProcessingService)]
-FileService = Annotated[FileServiceClass, Depends(getFileService)]
 IndexingService = Annotated[IndexingServiceClass, Depends(getIndexingService)]

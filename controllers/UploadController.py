@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from models import File
 import os
 from .BaseController import BaseController
 from fastapi.responses import JSONResponse
@@ -7,7 +7,7 @@ from fastapi import status
 class UploadController(BaseController):
     def __init__(self):
         super().__init__()
-    async def upload(self, file: UploadFile = File(...)):
+    async def upload(self, file: File):
         file_path = os.path.join(self.files_dir, file.filename)
         try:
             with open(file_path, "wb") as f:

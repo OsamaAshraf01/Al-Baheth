@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from repositories import db_connection
+from repositories.database import db_connection
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

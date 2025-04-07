@@ -1,9 +1,9 @@
 from pydantic import BaseModel, field_validator
 from fastapi import UploadFile, HTTPException, File as FastAPIFile, status
-from helpers import Settings
+from helpers import Settings, Annotated
 
 class File(BaseModel):
-    file: UploadFile = FastAPIFile(...)
+    file: Annotated[UploadFile, FastAPIFile(...)]
     
     @field_validator("file")
     def validate_size(cls, file: UploadFile, Settings: Settings):

@@ -4,3 +4,4 @@ nltk==3.9.1
 pydantic_settings==2.8.1
 python-terrier==0.13.0
 requests==2.32.3
+beanie==1.29.0

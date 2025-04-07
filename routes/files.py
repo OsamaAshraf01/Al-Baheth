@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, UploadFile, File, status
+from fastapi import APIRouter, Depends, UploadFile, File as FastapiFile, status
 from fastapi.responses import JSONResponse
 from controllers import UploadController, ProcessingController
+from models import File
 
 files_router = APIRouter(
     prefix= "/api/v1/files",
@@ -8,11 +9,12 @@ files_router = APIRouter(
 )
 
 @files_router.post("/upload")
-async def upload(file : UploadFile = File(...), controller : UploadController = Depends()):
+async def upload(file : UploadFile = FastapiFile(...), controller : UploadController = Depends()):
     #TODO: add a check for the file type and size
     #TODO: add file processing after upload
     #TODO: add assigning IDs to the files and map them to the main name using simple table
     #TODO: Check if the file hash value already exist to avoid duplicates
+    #file = File(file=file)
     return await controller.upload(file)
 
 @files_router.put("/{file_id}/process")

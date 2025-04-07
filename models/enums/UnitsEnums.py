@@ -1,0 +1,10 @@
+from enums import Enum
+
+class UnitsEnum(Enum):
+    BYTE = 1
+    KILOBYTE = 1024
+    MEGABYTE = 1024 * KILOBYTE
+    GIGABYTE = 1024 * MEGABYTE
+    TERABYTE = 1024 * GIGABYTE
+    PETABYTE = 1024 * TERABYTE
+    EXABYTE = 1024 * PETABYTE

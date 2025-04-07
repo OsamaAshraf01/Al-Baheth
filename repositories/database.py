@@ -5,4 +5,4 @@ from beanie import init_beanie
 async def db_connection(Settings: Settings):
     
     client = AsyncIOMotorClient(Settings.DB_URL)
-    await init_beanie(database=client.blog)
+    await init_beanie(database=client.al_baheth)

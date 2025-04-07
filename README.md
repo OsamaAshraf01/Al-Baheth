@@ -41,6 +41,8 @@ $pip install -e .
 $cp .env.example .env
 ```
 
+Then, set your environment variables in the `.env` file, and update values with your credentials.
+
 ### Pulling a MongoDB image
 
 ```bash
@@ -52,8 +54,6 @@ $docker pull mongodb/mongodb-community-server:latest
 ```bash
 $docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:latest
 ```
-
-Then, set your environment variables in the `.env` file, and update values with your credentials.
 
 ## Run the FastAPI Server
 

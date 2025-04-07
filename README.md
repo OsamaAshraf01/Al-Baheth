@@ -43,6 +43,8 @@ $cp .env.example .env
 
 Then, set your environment variables in the `.env` file, and update values with your credentials.
 
+## Setup MongoDB Database
+
 ### Pulling a MongoDB image
 
 ```bash

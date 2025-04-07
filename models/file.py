@@ -6,15 +6,6 @@ from helpers.config import get_settings
 
 class File(BaseModel):    
     file: Annotated[UploadFile, FastAPIFile(...)]
-    def __init__(self, upload_file: UploadFile = FastAPIFile(...)):
-        super().__init__(file=upload_file)
-    class Config:
-        arbitrary_types_allowed = True
-        json_schema_extra = {
-            "example": {
-                "file": "sample.txt"
-            }
-        }
     @field_validator("file")
     def validate_size(cls, file: UploadFile):
         Settings = get_settings()

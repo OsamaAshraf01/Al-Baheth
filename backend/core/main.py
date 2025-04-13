@@ -7,4 +7,3 @@ app.include_router(base_router)
 app.include_router(files_router)
 app.include_router(query_router)
 app.include_router(indexing_router)
-

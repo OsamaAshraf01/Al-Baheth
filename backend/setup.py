@@ -81,6 +81,22 @@ class PostInstallCommand(PostCommandMixin, install):
     pass
 
 
+
+def get_app_verion(env_path="core/.env"):
+    try:
+        with open(env_path) as f:
+            lines = f.readlines()
+        for line in lines:
+            if line.startswith("APP_VERSION="):
+                app_verion = line.strip().split("=", 1)[1]
+                app_verion = app_verion.replace('"', '').replace("'", "").strip()
+                return app_verion
+                
+    except FileNotFoundError:
+        raise RuntimeError("'.env' file not found or APP_VERSION not set")
+
+APP_VERSION = get_app_verion()
+
 # --- Read requirements.txt ---
 try:
     with open("requirements.txt", encoding="utf-8") as f:
@@ -97,7 +113,7 @@ except FileNotFoundError:
 # --- Setup Configuration ---
 setup(
     name="Al-Baheth",
-    version="0.1.1", 
+    version=APP_VERSION, 
     packages=find_packages(),
     install_requires=REQUIREMENTS_TXT, 
     include_package_data=True,

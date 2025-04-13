@@ -1,5 +1,6 @@
 fastapi==0.115.11
 uvicorn==0.34.0
+python-multipart==0.0.20
 langchain_community==0.2.19
 nltk==3.9.1
 pydantic_settings==2.8.1

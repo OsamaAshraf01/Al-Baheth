@@ -17,6 +17,9 @@ assets/
 index/
 !/services/Index/
 
+# MongoDB
+mongodb/
+
 # Distribution / packaging
 .Python
 build/

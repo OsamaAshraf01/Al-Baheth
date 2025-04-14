@@ -27,12 +27,22 @@ This is a search engine that searches in your own files.
 export PS1="\[\033[01;32m\]\u@\h:\w\n\[\033[00m\]\$ "
 ```
 
+## Working Directory
+
+Ensure your working directory is `root/backend/core` to complete the setup process properly
+<br>
+If you are on `root` run the following command
+
+```bash
+$cd backend/core
+```
+
 ## Installation
 
 ### Install the required packages
 
 ```bash
-$pip install -e .
+$pip install -e ..
 ```
 
 ### Setup the environment variables

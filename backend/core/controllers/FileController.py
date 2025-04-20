@@ -1,6 +1,9 @@
 from controllers import BaseController
-from services import ParsingService, LanguageProcessingService
+from services import ParsingService, LanguageProcessingService, DirectoryService
 from fastapi import HTTPException, status
+from fastapi.responses import JSONResponse
+from models import File
+import os
 
 
 class FileController(BaseController):
@@ -85,3 +88,23 @@ class FileController(BaseController):
         """
         content = self.parse(file_name)
         return self._clean(content)
+    
+    async def upload(self, file: File):
+    file_path = os.path.join(DirectoryService.files_dir, file.file.filename)
+    try:
+        with open(file_path, "wb") as f:
+            f.write(await file.file.read())
+    except:
+        raise JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            content={
+                "Message" : "Failed to upload the file"
+            }
+        )
+    
+    return JSONResponse(
+        status_code=200,
+        content={
+            "Message": "Successfully uploaded"
+        }
+    )

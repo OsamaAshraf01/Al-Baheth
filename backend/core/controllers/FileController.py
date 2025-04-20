@@ -3,7 +3,7 @@ from services import ParsingService, LanguageProcessingService
 from fastapi import HTTPException, status
 
 
-class ProcessingController(BaseController):
+class FileController(BaseController):
     
     def __init__(
             self, 

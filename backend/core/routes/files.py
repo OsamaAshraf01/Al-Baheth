@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile, File as FastapiFile, status
 from fastapi.responses import JSONResponse
-from controllers import UploadController, ProcessingController
+from controllers import UploadController, FileController
 from models import File
 
 files_router = APIRouter(
@@ -17,7 +17,7 @@ async def upload(file : UploadFile = FastapiFile(...), controller : UploadContro
     return await controller.upload(File(file=file))
 
 @files_router.put("/{file_id}/process")
-async def process_file(file_id: str, controller: ProcessingController = Depends()):
+async def process_file(file_id: str, controller: FileController = Depends()):
     content = controller.process(file_id)
 
     return JSONResponse(

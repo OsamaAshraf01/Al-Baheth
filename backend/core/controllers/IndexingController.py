@@ -2,11 +2,11 @@ from fastapi.responses import JSONResponse
 from fastapi import status, Depends
 import os
 from .BaseController import BaseController
-from .ProcessingController import ProcessingController
+from .FileController import FileController
 from services import IndexingService, DirectoryService
 
 class IndexingController(BaseController):
-    def __init__(self, indexing_service: IndexingService, processing_controller: ProcessingController = Depends()):
+    def __init__(self, indexing_service: IndexingService, processing_controller: FileController = Depends()):
         super().__init__()
         self.indexing_service = indexing_service
         self.processing_controller = processing_controller

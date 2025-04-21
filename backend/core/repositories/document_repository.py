@@ -12,4 +12,5 @@ class DocumentRepository:
         """
         hashed_content = hashlib.sha256(content.encode()).hexdigest()
         document = Document(file=file.file, title=file.file.filename, hashed_content=hashed_content)
-        return await document.insert()
+        await document.insert()
+        return document   

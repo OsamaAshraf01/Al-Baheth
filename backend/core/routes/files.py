@@ -14,7 +14,15 @@ async def upload(file : UploadFile = FastapiFile(...), controller : FileControll
     #TODO: add file processing after upload
     #TODO: add assigning IDs to the files and map them to the main name using simple table
     #TODO: Check if the file hash value already exist to avoid duplicates
-    return await controller.upload(File(file=file))
+    document = await controller.upload(File(file=file))
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content={
+            "message": "File uploaded successfully",
+            "file_name":document.title,
+            "key": document.hashed_content
+        }
+    )
 
 @files_router.put("/{file_id}/process")
 async def process_file(file_id: str, controller: FileController = Depends()):

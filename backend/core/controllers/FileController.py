@@ -1,9 +1,9 @@
 from controllers import BaseController
-from services import ParsingService, LanguageProcessingService
+from services import ParsingService, LanguageProcessingService, DirectoryService
 from models import File, Document
 from repositories import DocumentRepo
 from fastapi import HTTPException, status
-
+import os
 
 class FileController(BaseController):
     
@@ -97,5 +97,7 @@ class FileController(BaseController):
         :param file: File object containing the file information.
         :return: Processed content of the file.
         """
-        content = self.process(file.file)
+        file_path = os.path.join(DirectoryService.files_dir, file.file.filename)
+        
+        content = self.process(file_path)
         return await self.DocumentRepository.create(file, content)

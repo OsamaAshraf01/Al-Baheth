@@ -100,4 +100,12 @@ class FileController(BaseController):
         file_path = os.path.join(DirectoryService.files_dir, file.file.filename)
         
         content = self.process(file_path)
-        return await self.DocumentRepository.create(file, content)
+        created_document = await self.DocumentRepository.create(file, content)
+        if created_document is None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "message": f"File {file.file.filename} already exists!"
+                }
+            )
+        return created_document

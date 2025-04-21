@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File as FastapiFile, status
+from fastapi import APIRouter, Depends, UploadFile, File as FastapiFile, status, HTTPException
 from fastapi.responses import JSONResponse
 from controllers import FileController
 from models import File
@@ -14,15 +14,29 @@ async def upload(file : UploadFile = FastapiFile(...), controller : FileControll
     #TODO: add file processing after upload
     #TODO: add assigning IDs to the files and map them to the main name using simple table
     #TODO: Check if the file hash value already exist to avoid duplicates
-    document = await controller.upload(File(file=file))
-    return JSONResponse(
-        status_code=status.HTTP_201_CREATED,
-        content={
-            "message": "File uploaded successfully",
-            "file_name":document.title,
-            "key": document.hashed_content
-        }
-    )
+    try:
+        document = await controller.upload(File(file=file))
+        
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={
+                "message": "File uploaded successfully",
+                "file_id": document.id,
+                "filename": document.file_metadata.filename,
+                "content_type": document.file_metadata.content_type,
+                "size": document.file_metadata.size
+            }
+        )
+    except HTTPException as e:
+        if e.status_code == status.HTTP_409_CONFLICT:
+            return JSONResponse(
+                status_code=status.HTTP_409_CONFLICT,
+                content={
+                    "message": f"File {file.filename} already exists!"
+                }
+            )
+        else:
+            raise e
 
 @files_router.put("/{file_id}/process")
 async def process_file(file_id: str, controller: FileController = Depends()):

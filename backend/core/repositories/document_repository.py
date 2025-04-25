@@ -1,5 +1,4 @@
 from models import File, Document
-from models.document import FileMetadata
 import hashlib
 from typing import Optional, List, Dict, Any
 from beanie import PydanticObjectId
@@ -19,16 +18,11 @@ class DocumentRepository:
         if found:
             return None
         
-        file_metadata = FileMetadata(
-            filename=file.file.filename, 
-            content_type=file.file.content_type,
-            size=file.file.size
-        )
-        
         document = Document(
-            file_metadata=file_metadata, 
+            hashed_content=hashed_content,
+            content_type=file.file.content_type,
+            data= await file.file.read(),
             title=file.file.filename, 
-            hashed_content=hashed_content
         )
         
         await document.insert()

@@ -21,10 +21,9 @@ async def upload(file : UploadFile = FastapiFile(...), controller : FileControll
             status_code=status.HTTP_201_CREATED,
             content={
                 "message": "File uploaded successfully",
-                "file_id": document.id,
-                "filename": document.file_metadata.filename,
-                "content_type": document.file_metadata.content_type,
-                "size": document.file_metadata.size
+                "hashed_key": document.hashed_content,
+                "content_type": document.content_type,
+                "title": document.title,
             }
         )
     except HTTPException as e:

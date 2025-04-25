@@ -97,7 +97,7 @@ class FileController(BaseController):
         :param file: File object containing the file information.
         :return: Processed content of the file.
         """
-        file_path = os.path.join(DirectoryService.files_dir, file.file.filename)
+        file_path = os.path.join(DirectoryService.files_dir, file.filename)
         
         content = self.process(file_path)
         created_document = await self.DocumentRepository.create(file, content)
@@ -105,7 +105,7 @@ class FileController(BaseController):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail={
-                    "message": f"File {file.file.filename} already exists!"
+                    "message": f"File {file.filename} already exists!"
                 }
             )
         return created_document

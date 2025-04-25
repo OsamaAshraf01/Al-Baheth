@@ -1,19 +1,22 @@
-from pydantic import BaseModel, field_validator
-from fastapi import UploadFile, HTTPException, File as FastAPIFile, status
+from fastapi import UploadFile, HTTPException, File as FastAPIFile, Depends
 from helpers import Annotated
 from helpers.config import get_settings
 # from models.enums import UnitsEnum
 
-class File(BaseModel):    
-    file: Annotated[UploadFile, FastAPIFile(...)]
-    @field_validator("file")
-    def validate_size(cls, file: UploadFile):
-        Settings = get_settings()
-        if file.size > (Settings.FILE_MAX_SIZE * 1024 * 1024):
+class _File:
+    """A dependency class that checks file size"""
+    def __init__(self):
+        settings = get_settings()
+        self.max_size = settings.FILE_MAX_SIZE
+    
+    async def __call__(self, file: UploadFile = FastAPIFile(...)) -> UploadFile:
+        
+        if file.size > self.max_size * 1024 * 1024:
             raise HTTPException(
-                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                detail=f"File size is Larger than {Settings.FILE_MAX_SIZE}MB."
+                status_code=413,
+                detail=f"File too large. Maximum size allowed is {self.max_size} MB"
             )
+            
         return file
     
-    
+File = Annotated[UploadFile, Depends(_File())]

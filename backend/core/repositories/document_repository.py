@@ -20,9 +20,9 @@ class DocumentRepository:
         
         document = Document(
             hashed_content=hashed_content,
-            content_type=file.file.content_type,
-            data= await file.file.read(),
-            title=file.file.filename, 
+            content_type=file.content_type,
+            data= await file.read(),
+            title=file.filename, 
         )
         
         await document.insert()

@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from controllers import QueryController
 
 query_router = APIRouter(
@@ -7,6 +7,5 @@ query_router = APIRouter(
 )
 
 @query_router.get("/")
-async def query(query : str):
-    controller = QueryController()
+async def query(query : str, controller: QueryController = Depends(QueryController)):
     return await controller.query(query)

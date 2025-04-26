@@ -28,7 +28,7 @@ class PyTerrierService(IndexingService):
     #     return self.indexer.index(corpus)
     
     
-    def index(self, file_id: str, content: str) -> bool:
+    async def index(self, file_id: str, content: str) -> bool:
         """
         Index the given corpus and return the index reference.
         

@@ -2,8 +2,17 @@ from models import File, Document
 import hashlib
 from typing import Optional, List, Dict, Any
 from beanie import PydanticObjectId
+from services import IndexingService
 
 class DocumentRepository:
+
+    def __init__(self, indexing_service: IndexingService):
+        """
+        Initialize the DocumentRepository with an indexing service.
+        
+        :param indexing_service: An instance of IndexingService for indexing documents.
+        """
+        self.indexing_service = indexing_service
 
     async def create(self, file: File, content : str) -> Optional[Document]:
         """
@@ -26,7 +35,22 @@ class DocumentRepository:
         )
         
         await document.insert()
+        
+        await self.indexing_service.index(file_id=document.hashed_content, content=content)
+        
         return document
+    
+    # for testing purposes only
+    async def search(self, query: str) -> List[str]:
+        """
+        Search for documents in the index.
+        
+        :param query: The search query.
+        :return: A list of document titles matching the search query.
+        """
+        IDs = await self.indexing_service.search(query)
+        docs = await Document.find_all(Document.hashed_content.in_(IDs)).to_list()
+        return [doc.title for doc in docs]
     
     async def get_by_key(self, key: str) -> Optional[Document]:
         """

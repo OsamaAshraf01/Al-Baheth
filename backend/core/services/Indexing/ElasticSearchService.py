@@ -18,3 +18,22 @@ class ElasticSearchService(IndexingService):
         if res['result'] == 'created':
             return True
         return False
+    
+    async def search(self, query: str) -> list:
+        '''
+        Search for documents in Elasticsearch.
+        
+        :param query: The search query.
+        :return: A list of documents IDs matching the search query.
+        '''
+        res = await self.es.search(
+            index=self.index_name,
+            query={
+                "match": {
+                    "content": query
+                }
+            }
+        )
+        
+        file_ids = [hit["_source"]["file_id"] for hit in res["hits"]["hits"]]
+        return file_ids

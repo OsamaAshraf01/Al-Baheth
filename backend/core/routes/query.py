@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from controllers import QueryController
+from controllers import FileController
 
 query_router = APIRouter(
     prefix= "/api/v1/query",
@@ -7,5 +7,5 @@ query_router = APIRouter(
 )
 
 @query_router.get("/")
-async def query(query : str, controller: QueryController = Depends(QueryController)):
+async def query(query : str, controller: FileController = Depends()):
     return await controller.query(query)

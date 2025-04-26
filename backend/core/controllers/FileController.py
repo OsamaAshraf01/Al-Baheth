@@ -109,3 +109,13 @@ class FileController(BaseController):
                 }
             )
         return created_document
+    
+    async def query(self, query: str) -> list:
+        """
+        Search for documents in the index.
+        
+        :param query: The search query.
+        :return: A list of document titles matching the search query.
+        """
+        query = self._clean(query)
+        return await self.DocumentRepository.search(query)

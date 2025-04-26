@@ -49,7 +49,7 @@ class DocumentRepository:
         :return: A list of document titles matching the search query.
         """
         IDs = await self.indexing_service.search(query)
-        docs = await Document.find_all(Document.hashed_content.in_(IDs)).to_list()
+        docs = await Document.find({"hashed_content": {"$in": IDs}}).to_list()
         return [doc.title for doc in docs]
     
     async def get_by_key(self, key: str) -> Optional[Document]:
@@ -118,4 +118,3 @@ class DocumentRepository:
         except Exception as e:
             print(f"Error deleting document: {e}")
             return False
-    

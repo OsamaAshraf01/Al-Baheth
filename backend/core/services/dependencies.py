@@ -65,6 +65,9 @@ def getIndexingService(settings: Settings) -> IndexingService:
     if settings.INDEXING_SERVICE == IndexingEnum.PyTerrier.value:
         return PyTerrierService()
     
+    if settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
+        return IndexingService()
+    
     raise HTTPException(
         status_code=404,
         detail="Indexing service not found"

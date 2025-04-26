@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends, Request
 from helpers import Settings
 from services.Parsing import ParsingService, LangChainService
 from services.NLP import LanguageProcessingService, NLTKService
@@ -49,12 +49,13 @@ def getLanguageProcessingService(settings: Settings) -> LanguageProcessingServic
     )
 
     
-def getIndexingService(settings: Settings) -> IndexingService:
+def getIndexingService(settings: Settings, request: Request = None) -> IndexingService:
     """
     Retrieves the appropriate indexing service based on the provided settings.
 
     Args:
         settings (Settings): The settings object containing configuration for the indexing service.
+        request (Request, optional): The FastAPI request object, needed for ElasticSearch service.
 
     Returns:
         IndexingService: An instance of the selected indexing service.
@@ -66,7 +67,12 @@ def getIndexingService(settings: Settings) -> IndexingService:
         return PyTerrierService()
     
     if settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
-        return ElasticSearchService()
+        if request is None:
+            raise HTTPException(
+                status_code=500,
+                detail="Request object is required for ElasticSearch service"
+            )
+        return ElasticSearchService(request)
     
     raise HTTPException(
         status_code=404,

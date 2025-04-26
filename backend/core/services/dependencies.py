@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from helpers import Settings
 from services.Parsing import ParsingService, LangChainService
 from services.NLP import LanguageProcessingService, NLTKService
-from services.Indexing import IndexingService, PyTerrierService
+from services.Indexing import IndexingService, PyTerrierService, ElasticSearchService
 from models.enums import LanguageProcessingEnum, FileEnum, IndexingEnum
 
 
@@ -66,7 +66,7 @@ def getIndexingService(settings: Settings) -> IndexingService:
         return PyTerrierService()
     
     if settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
-        return IndexingService()
+        return ElasticSearchService()
     
     raise HTTPException(
         status_code=404,

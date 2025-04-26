@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     PARSING_SERVICE : str
     INDEXING_SERVICE : str
     DB_URL : str
+    ES_URL: str
+    ES_INDEXING: str
     
     model_config = {
         "env_file": os.path.join(os.path.dirname(__file__), "../.env"),

@@ -1,10 +1,11 @@
 from fastapi import Request
 from .IndexingService import IndexingService
+from helpers.config import get_settings
 
 class ElasticSearchService(IndexingService):
     def __init__(self, request: Request):
         self.es = request.app.es_client
-        self.index_name = "docs"
+        self.index_name = get_settings().ES_INDEXING
     
     async def index(self, file_id: str, content: str) -> bool:
         """

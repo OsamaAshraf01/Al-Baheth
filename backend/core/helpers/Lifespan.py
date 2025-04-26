@@ -16,16 +16,16 @@ async def lifespan(app: FastAPI):
     
     :param app: FastAPI application instance.
     """
-    db_Settings = get_settings()
-    app.mongodb_client = AsyncIOMotorClient(db_Settings.DB_URL)
+    _settings_ = get_settings()
+    app.mongodb_client = AsyncIOMotorClient(_settings_.DB_URL)
     app.db = app.mongodb_client.al_baheth
     await init_beanie(database=app.db, document_models=[Document])
     
-    if db_Settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
-        app.es_client = AsyncElasticsearch("http://localhost:9200")
-        if not await app.es_client.indices.exists(index="docs"):
+    if _settings_.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
+        app.es_client = AsyncElasticsearch(_settings_.ES_URL)
+        if not await app.es_client.indices.exists(index=_settings_.ES_INDEXING):
             await app.es_client.indices.create(
-                index="docs",
+                index=_settings_.ES_INDEXING,
                 mappings={
                     "properties": {
                         "file_id": {"type": "keyword"},
@@ -38,5 +38,5 @@ async def lifespan(app: FastAPI):
     
     app.mongodb_client.close()
     
-    if db_Settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
+    if _settings_.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
         await app.es_client.close()

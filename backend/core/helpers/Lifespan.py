@@ -4,6 +4,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from helpers.config import get_settings
 from beanie import init_beanie
 from models import Document
+from models.enums import IndexingEnum
+from elasticsearch import AsyncElasticsearch
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -15,10 +17,26 @@ async def lifespan(app: FastAPI):
     :param app: FastAPI application instance.
     """
     db_Settings = get_settings()
-    app.client = AsyncIOMotorClient(db_Settings.DB_URL)
-    app.db = app.client.al_baheth
+    app.mongodb_client = AsyncIOMotorClient(db_Settings.DB_URL)
+    app.db = app.mongodb_client.al_baheth
     await init_beanie(database=app.db, document_models=[Document])
     
+    if db_Settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
+        app.es_client = AsyncElasticsearch("http://localhost:9200")
+        if not await app.es_client.indices.exists(index="docs"):
+            await app.es_client.indices.create(
+                index="docs",
+                mappings={
+                    "properties": {
+                        "file_id": {"type": "keyword"},
+                        "content": {"type": "text"}
+                    }
+                }
+            )
+
     yield
     
-    app.client.close()
+    app.mongodb_client.close()
+    
+    if db_Settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
+        await app.es_client.close()

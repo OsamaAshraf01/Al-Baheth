@@ -23,6 +23,16 @@ class PyTerrierService(IndexingService):
         """
         return os.path.exists(os.path.join(DirectoryService.index_dir, "data.properties"))
             
-    def index(self, corpus: dict) -> str:
-        # return self.indexer.index(corpus, append=True) if self.isExistingIndex() else self.indexer.index(corpus)
-        return self.indexer.index(corpus)
+    # def index(self, corpus: dict) -> str:
+    #     # return self.indexer.index(corpus, append=True) if self.isExistingIndex() else self.indexer.index(corpus)
+    #     return self.indexer.index(corpus)
+    
+    
+    def index(self, file_id: str, content: str) -> bool:
+        """
+        Index the given corpus and return the index reference.
+        
+        :param corpus: Dictionary containing the corpus to index. It consists of two keys: docno and text.
+        :return: Index reference.
+        """
+        pass

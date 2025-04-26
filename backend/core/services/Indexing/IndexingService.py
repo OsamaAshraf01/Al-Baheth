@@ -5,7 +5,7 @@ class IndexingService(ABC):
     Abstract base class for indexing services.
     """
     @abstractmethod
-    def index(self, corpus: dict) -> str:
+    def index(self, file_id: str, content: str) -> bool:
         """
         Index the given corpus and return the index reference.
         

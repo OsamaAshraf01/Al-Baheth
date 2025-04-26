@@ -20,6 +20,9 @@ index/
 # MongoDB
 mongodb/
 
+# ElasticSearch
+esdata/
+
 # Distribution / packaging
 .Python
 build/

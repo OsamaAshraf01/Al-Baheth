@@ -1,7 +1,9 @@
-from ..models import File, Document
 import hashlib
 from typing import Optional, List, Dict, Any
+
 from beanie import PydanticObjectId
+
+from ..models import File, Document
 from ..services import IndexingService
 
 class DocumentRepository:
@@ -14,32 +16,33 @@ class DocumentRepository:
         """
         self.indexing_service = indexing_service
 
-    async def create(self, file: File, content : str) -> Optional[Document]:
+    async def create(self, file: File, content: str) -> Optional[Document]:
         """
         Create a new document in the database from the file.
         
         :param file: File object containing the file information.
+        :param content: The content of the file to be hashed.
         :return: Document object created from the file.
         """
         hashed_content = hashlib.sha256(content.encode()).hexdigest()
-        
+
         found = await self.get_by_key(hashed_content)
         if found:
             return None
-        
+
         document = Document(
             hashed_content=hashed_content,
             content_type=file.content_type,
-            data= await file.read(),
-            title=file.filename, 
+            data=await file.read(),
+            title=file.filename,
         )
-        
+
         await document.insert()
-        
+
         await self.indexing_service.index(file_id=document.hashed_content, content=content)
-        
+
         return document
-    
+
     # for testing purposes only
     async def search(self, query: str) -> List[str]:
         """
@@ -51,21 +54,21 @@ class DocumentRepository:
         IDs = await self.indexing_service.search(query)
         docs = await Document.find({"hashed_content": {"$in": IDs}}).to_list()
         return [doc.title for doc in docs]
-    
-    async def get_by_key(self, key: str) -> Optional[Document]:
+
+    async def get_by_key(self, hashing_key: str) -> Optional[Document]:
         """
         Get a document by its hashed content.
         
         :param hashing_key: The hashed content of the document.
         :return: Document object if found, None otherwise.
         """
-        document = await Document.find_one(Document.hashed_content == key)
+        document = await Document.find_one(Document.hashed_content == hashing_key)
         return document
-    
+
     async def get_by_id(self, document_id: str) -> Optional[Document]:
         """
         Get a document by its ID.
-        
+
         :param document_id: The ID of the document to retrieve.
         :return: Document object if found, None otherwise.
         """
@@ -75,7 +78,7 @@ class DocumentRepository:
             return document
         except:
             return None
-    
+
     async def update(self, document_id: str, update_data: Dict[str, Any]) -> Optional[Document]:
         """
         Update a document by its ID.
@@ -88,19 +91,19 @@ class DocumentRepository:
             document = await self.get_by_id(document_id)
             if not document:
                 return None
-                
+
             # Update only the allowed fields
             allowed_fields = ["title", "file_metadata"]
             for field in allowed_fields:
                 if field in update_data:
                     setattr(document, field, update_data[field])
-            
+
             await document.save()
             return document
         except Exception as e:
             print(f"Error updating document: {e}")
             return None
-    
+
     async def delete(self, document_id: str) -> bool:
         """
         Delete a document by its ID.
@@ -112,7 +115,7 @@ class DocumentRepository:
             document = await self.get_by_id(document_id)
             if not document:
                 return False
-                
+
             await document.delete()
             return True
         except Exception as e:

@@ -1,2 +1,2 @@
-from .file import File
 from .document import Document
+from .file import File

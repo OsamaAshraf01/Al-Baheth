@@ -1,11 +1,11 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {motion} from 'framer-motion';
+import {ArrowLeft} from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import ResultItem from '../components/ResultItem';
 import PageTransition from '../components/PageTransition';
-import { SearchResult } from '../types';
+import {SearchResult} from '../types';
 
 interface LocationState {
   results: SearchResult[];

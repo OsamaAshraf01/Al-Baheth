@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Download, Share2, Printer, ExternalLink } from 'lucide-react';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams, useSearchParams} from 'react-router-dom';
+import {motion} from 'framer-motion';
+import {ArrowLeft, Download, ExternalLink, Printer, Share2} from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import FileTypeIcon from '../components/FileTypeIcon';
 import PageTransition from '../components/PageTransition';
-import { mockSearchResults } from '../utils/fileUtils';
-import { getFileTypeFromExtension } from '../utils/fileUtils';
+import {getFileTypeFromExtension, mockSearchResults} from '../utils/fileUtils';
 
 const ResultPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

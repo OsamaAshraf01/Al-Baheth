@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
-import { AnimatePresence } from 'framer-motion';
+import {BrowserRouter, Route, Routes, useLocation} from 'react-router-dom';
+import {ThemeProvider} from './context/ThemeContext';
+import {AnimatePresence} from 'framer-motion';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import ResultsPage from './pages/ResultsPage';

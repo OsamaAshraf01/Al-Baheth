@@ -1,8 +1,8 @@
 import React from 'react';
-import { Search } from 'lucide-react';
-import { motion } from 'framer-motion';
+import {Search} from 'lucide-react';
+import {motion} from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 const Header: React.FC = () => {
   return (

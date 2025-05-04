@@ -1,6 +1,6 @@
 // filepath: d:\University\Year 2\Semester 2\Information Retrieval\Project\frontend\project\src\components\BackgroundLight.tsx
 import React from 'react';
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion';
 
 interface BackgroundLightProps {
   color?: 'primary' | 'accent';

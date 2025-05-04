@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 
+
 class IndexingService(ABC):
     """
     Abstract base class for indexing services.
     """
+
     @abstractmethod
     async def index(self, file_id: str, content: str) -> bool:
         """
@@ -13,7 +15,7 @@ class IndexingService(ABC):
         :return: Index reference.
         """
         pass
-    
+
     async def search(self, query: str) -> list:
         """
         Search for documents in the index.

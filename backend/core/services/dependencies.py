@@ -1,9 +1,10 @@
-from fastapi import HTTPException, Depends, Request
+from fastapi import HTTPException, Request
+
 from ..helpers import Settings
-from ..services.Parsing import ParsingService, LangChainService
-from ..services.NLP import LanguageProcessingService, NLTKService
-from ..services.Indexing import IndexingService, PyTerrierService, ElasticSearchService
 from ..models.enums import LanguageProcessingEnum, FileEnum, IndexingEnum
+from ..services.Indexing import IndexingService, PyTerrierService, ElasticSearchService
+from ..services.NLP import LanguageProcessingService, NLTKService
+from ..services.Parsing import ParsingService, LangChainService
 
 
 def getParsingService(settings: Settings) -> ParsingService:
@@ -21,12 +22,13 @@ def getParsingService(settings: Settings) -> ParsingService:
     """
     if settings.PARSING_SERVICE == FileEnum.LangChain.value:
         return LangChainService()
-    
+
     raise HTTPException(
         status_code=404,
         detail="File service not found"
     )
-    
+
+
 def getLanguageProcessingService(settings: Settings) -> LanguageProcessingService:
     """
     Retrieves the appropriate language processing service based on the provided settings.
@@ -42,13 +44,13 @@ def getLanguageProcessingService(settings: Settings) -> LanguageProcessingServic
     """
     if settings.LANGUAGE_PROCESSOR == LanguageProcessingEnum.NLTK.value:
         return NLTKService()
-    
+
     raise HTTPException(
         status_code=404,
         detail="Language processor service not found"
     )
 
-    
+
 def getIndexingService(settings: Settings, request: Request = None) -> IndexingService:
     """
     Retrieves the appropriate indexing service based on the provided settings.
@@ -65,7 +67,7 @@ def getIndexingService(settings: Settings, request: Request = None) -> IndexingS
     """
     if settings.INDEXING_SERVICE == IndexingEnum.PyTerrier.value:
         return PyTerrierService()
-    
+
     if settings.INDEXING_SERVICE == IndexingEnum.ElasticSearch.value:
         if request is None:
             raise HTTPException(
@@ -73,7 +75,7 @@ def getIndexingService(settings: Settings, request: Request = None) -> IndexingS
                 detail="Request object is required for ElasticSearch service"
             )
         return ElasticSearchService(request)
-    
+
     raise HTTPException(
         status_code=404,
         detail="Indexing service not found"

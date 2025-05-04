@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Upload, File, X, AlertCircle, Check } from 'lucide-react';
-import { UploadedFile } from '../types';
-import { formatFileSize } from '../utils/fileUtils';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, {useCallback, useState} from 'react';
+import {useDropzone} from 'react-dropzone';
+import {AlertCircle, Check, File, Upload, X} from 'lucide-react';
+import {UploadedFile} from '../types';
+import {formatFileSize} from '../utils/fileUtils';
+import {AnimatePresence, motion} from 'framer-motion';
 
 interface FileUploaderProps {
   onFileSelect: (file: File) => void;

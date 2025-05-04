@@ -1,5 +1,7 @@
-from ..helpers import Settings
 import os
+
+from ..helpers import Settings
+
 
 # this controller will contain the common methods that will be used by other controllers
 class BaseController:

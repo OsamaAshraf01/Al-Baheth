@@ -1,9 +1,10 @@
-from abc import ABC, abstractmethod
 import re
+from abc import ABC, abstractmethod
 from typing import List
 
+
 class LanguageProcessingService(ABC):
-    
+
     def normalize(self, text: str) -> str:
         """
         Normalize the input text by converting it to lowercase, 
@@ -19,7 +20,7 @@ class LanguageProcessingService(ABC):
         """
         text = text.lower()
         text = re.sub("[^a-z ]+", " ", text).strip()
-        text = re.sub("\s+", " ", text).strip()
+        text = re.sub(r"\s+", " ", text).strip()
         return text
 
     @abstractmethod
@@ -35,7 +36,7 @@ class LanguageProcessingService(ABC):
         """
         pass
 
-    @abstractmethod    
+    @abstractmethod
     def remove_stopwords(self, tokens: List[str]) -> List[str]:
         """
         Remove stopwords from a List of tokens.
@@ -47,9 +48,9 @@ class LanguageProcessingService(ABC):
             List[str]: A new List containing only the tokens that are not stopwords.
         """
         pass
-    
+
     @abstractmethod
-    def lemmatize(self, tokens : List[str]) -> List[str]:
+    def lemmatize(self, tokens: List[str]) -> List[str]:
         """
         Lemmatizes a List of tokens using their part-of-speech tags.
 
@@ -64,7 +65,7 @@ class LanguageProcessingService(ABC):
             List[str]: A List of lemmatized tokens.
         """
         pass
-    
+
     @abstractmethod
     def stem(self, tokens) -> List[str]:
         """
@@ -77,5 +78,3 @@ class LanguageProcessingService(ABC):
             List[str]: A List of stemmed words.
         """
         pass
-    
-    

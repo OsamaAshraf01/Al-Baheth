@@ -6,4 +6,3 @@ class ProcessingEnum(Enum):
     PDF = ".pdf"
     DOCX = ".docx"
     PPTX = ".pptx"
-    

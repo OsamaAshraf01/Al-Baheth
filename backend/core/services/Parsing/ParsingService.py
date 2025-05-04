@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class ParsingService(ABC):
     """
     Abstract base class for Parsing services.
@@ -14,4 +15,3 @@ class ParsingService(ABC):
         :return: Text content of the file.
         """
         pass
-    

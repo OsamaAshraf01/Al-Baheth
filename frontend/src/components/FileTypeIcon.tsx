@@ -1,6 +1,6 @@
 import React from 'react';
-import { FileText, FileType, File as FilePpt, FileSpreadsheet, FileCog, FileTerminal } from 'lucide-react';
-import { FileType as FileTypeEnum } from '../types';
+import {File as FilePpt, FileCog, FileSpreadsheet, FileTerminal, FileText, FileType} from 'lucide-react';
+import {FileType as FileTypeEnum} from '../types';
 
 interface FileTypeIconProps {
   fileType: FileTypeEnum;

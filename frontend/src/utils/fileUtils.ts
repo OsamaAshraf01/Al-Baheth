@@ -1,4 +1,4 @@
-import { FileType } from '../types';
+import {FileType} from '../types';
 
 export const getFileTypeFromExtension = (filename: string): FileType => {
   const extension = filename.split('.').pop()?.toLowerCase() || '';

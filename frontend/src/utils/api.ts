@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SearchResult } from '../types';
+import {SearchResult} from '../types';
 
 // API base URL - update this to match your backend server address
 const API_BASE_URL = 'http://localhost:8000/api/v1';

@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, Search } from 'lucide-react';
-import { SearchResult } from '../types';
+import {motion} from 'framer-motion';
+import {Calendar, Search} from 'lucide-react';
+import {SearchResult} from '../types';
 import FileTypeIcon from './FileTypeIcon';
-import { getFileTypeFromExtension } from '../utils/fileUtils';
+import {getFileTypeFromExtension} from '../utils/fileUtils';
 
 interface ResultItemProps {
   result: SearchResult;

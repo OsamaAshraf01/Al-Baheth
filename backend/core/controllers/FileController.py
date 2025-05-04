@@ -1,40 +1,52 @@
-from ..controllers import BaseController
-from ..services import ParsingService, LanguageProcessingService, DirectoryService
-from ..models import File, Document
-from ..repositories import DocumentRepo
-from fastapi import HTTPException, status
 import os
 
+from fastapi import HTTPException, status
+
+from ..controllers import BaseController
+from ..models import File, Document
+from ..repositories import DocumentRepo
+from ..services import ParsingService, LanguageProcessingService, DirectoryService
+from ..models.enums import ResponseEnum
+
+
 class FileController(BaseController):
-    
+
     def __init__(
-            self, 
-            ParsingService: ParsingService, 
+            self,
+            ParsingService: ParsingService,
             LanguageProcessingService: LanguageProcessingService,
             DocumentRepository: DocumentRepo
-        ):
-        
+    ):
+
         super().__init__()
         self.ParsingService = ParsingService
         self.LanguageProcessingService = LanguageProcessingService
         self.DocumentRepository = DocumentRepository
 
     def parse(self, file_name):
-        loader= self.ParsingService.load(file_name)
-        
-        if loader is None:
+        loader = self.ParsingService.load(file_name)
+
+        if loader == ResponseEnum.FILE_NOT_FOUND:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={
-                    "message": f"File {file_name} not found!"
+                    "message": f"file {file_name} not found."
                 }
             )
-            
+
+        if loader == ResponseEnum.FILE_TYPE_NOT_SUPPORTED:
+            raise HTTPException(
+                status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                detail={
+                    "message": f"file type {file_name} not supported."
+                }
+            )
+
         content = loader.load()
         content = "\n".join([doc.page_content for doc in content])
-        
+
         return content  # the return will be updated to be mor e generic in the future
-    
+
     def paginate(self, text: str, page_size: int = 1000) -> list:
         """
         Paginate the text content.
@@ -44,9 +56,8 @@ class FileController(BaseController):
         :return: List of paginated text content.
         """
         tokens = self.LanguageProcessingService.tokenize(text)
-        return [" ".join(tokens[i:i + page_size]) for i in range(0, len(tokens), page_size)] 
-    
-    
+        return [" ".join(tokens[i:i + page_size]) for i in range(0, len(tokens), page_size)]
+
     def _clean(self, text: str) -> str:
         """
         Clean the extracted text.
@@ -64,14 +75,13 @@ class FileController(BaseController):
         # Stopwords removal
         tokens = self.LanguageProcessingService.remove_stopwords(tokens)
 
-        processed_tokens = self.LanguageProcessingService.lemmatize(tokens)  
-        
+        processed_tokens = self.LanguageProcessingService.lemmatize(tokens)
+
         # Stemming
         processed_tokens = self.LanguageProcessingService.stem(processed_tokens)
 
         return ' '.join(processed_tokens)
-    
-    
+
     def process(self, file_name: str) -> str:
         """
         Processes the content of a specified file by parsing it and 
@@ -89,7 +99,7 @@ class FileController(BaseController):
         """
         content = self.parse(file_name)
         return self._clean(content)
-    
+
     async def upload(self, file: File) -> Document:
         """
         Upload a file and process its content.
@@ -98,7 +108,7 @@ class FileController(BaseController):
         :return: Processed content of the file.
         """
         file_path = os.path.join(DirectoryService.files_dir, file.filename)
-        
+
         content = self.process(file_path)
         created_document = await self.DocumentRepository.create(file, content)
         if created_document is None:
@@ -109,7 +119,7 @@ class FileController(BaseController):
                 }
             )
         return created_document
-    
+
     async def query(self, query: str) -> list:
         """
         Search for documents in the index.

@@ -1,7 +1,7 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Maximize2, Minimize2, ArrowLeft, Search } from 'lucide-react';
-import { SearchResult } from '../types';
+import {AnimatePresence, motion} from 'framer-motion';
+import {ArrowLeft, Maximize2, Minimize2, Search, X} from 'lucide-react';
+import {SearchResult} from '../types';
 import ResultItem from './ResultItem';
 
 interface ResultsPanelProps {

@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Search, Loader, X, ExternalLink, AlertCircle } from 'lucide-react';
+import React, {useEffect, useState} from 'react';
+import {AnimatePresence, motion} from 'framer-motion';
+import {useNavigate} from 'react-router-dom';
+import {AlertCircle, ExternalLink, Loader, Search, X} from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import FileUploader from '../components/FileUploader';
 import FileTypeIcon from '../components/FileTypeIcon';
 import PageTransition from '../components/PageTransition';
 import BackgroundLight from '../components/BackgroundLight';
-import { SearchResult } from '../types';
-import { getFileTypeFromExtension } from '../utils/fileUtils';
-import { apiService } from '../utils/api';
+import {SearchResult} from '../types';
+import {getFileTypeFromExtension} from '../utils/fileUtils';
+import {apiService} from '../utils/api';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();

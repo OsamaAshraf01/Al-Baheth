@@ -1,8 +1,9 @@
 import sys
-import subprocess
+
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 from setuptools.command.develop import develop
+from setuptools.command.install import install
+
 
 # --- NLTK Download Function ---
 def download_nltk_data_internal():
@@ -19,18 +20,18 @@ def download_nltk_data_internal():
     print("Attempting to download required NLTK data...")
     print(f"Datasets to download: {', '.join(datasets)}")
     print("--------------------------------------------------")
-    
+
     all_downloaded = True
     try:
         # Import nltk HERE, only when needed, after installation
         import nltk
-        
+
         for dataset in datasets:
             try:
                 print(f"\n>>> Checking/downloading NLTK dataset: {dataset}")
-                nltk.download(dataset) # Let nltk handle checking if already downloaded
+                nltk.download(dataset)  # Let nltk handle checking if already downloaded
             except FileExistsError:
-                 print(f"    Dataset '{dataset}' already exists.")
+                print(f"    Dataset '{dataset}' already exists.")
             except Exception as e:
                 print(f"    ERROR downloading NLTK data '{dataset}': {e}", file=sys.stderr)
                 print("    Please try manually: python -m nltk.downloader [dataset_name]")
@@ -56,6 +57,7 @@ def download_nltk_data_internal():
 
 class PostCommandMixin:
     """Mixin to run NLTK download after installation."""
+
     def run_nltk_download(self):
         # Run the download function in a separate process to ensure
         # it uses the final installed environment's NLTK, although
@@ -81,7 +83,6 @@ class PostInstallCommand(PostCommandMixin, install):
     pass
 
 
-
 def get_app_verion(env_path="core/.env"):
     try:
         with open(env_path) as f:
@@ -91,9 +92,10 @@ def get_app_verion(env_path="core/.env"):
                 app_verion = line.strip().split("=", 1)[1]
                 app_verion = app_verion.replace('"', '').replace("'", "").strip()
                 return app_verion
-                
+
     except FileNotFoundError:
         raise RuntimeError("'.env' file not found or APP_VERSION not set")
+
 
 APP_VERSION = get_app_verion()
 
@@ -109,13 +111,12 @@ except FileNotFoundError:
     print("Warning: requirements.txt not found. Proceeding without install_requires.", file=sys.stderr)
     REQUIREMENTS_TXT = []
 
-
 # --- Setup Configuration ---
 setup(
     name="Al-Baheth",
-    version=APP_VERSION, 
+    version=APP_VERSION,
     packages=find_packages(),
-    install_requires=REQUIREMENTS_TXT, 
+    install_requires=REQUIREMENTS_TXT,
     include_package_data=True,
     url="https://github.com/OsamaAshraf01/Al-Baheth",
     author="Your Name",

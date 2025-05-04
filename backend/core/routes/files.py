@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 
 from ..controllers import FileController
 from ..models import File
+from ..models.enums import ResponseEnum
 
 files_router = APIRouter(
     prefix="/api/v1/files",
@@ -22,7 +23,7 @@ async def upload(file: File, controller: FileController = Depends()):
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
-                "message": "File uploaded successfully",
+                "message": ResponseEnum.FILE_UPLOAD_SUCCESS,
                 "hashed_key": document.hashed_content,
                 "content_type": document.content_type,
                 "title": document.title,
@@ -33,7 +34,7 @@ async def upload(file: File, controller: FileController = Depends()):
             return JSONResponse(
                 status_code=status.HTTP_409_CONFLICT,
                 content={
-                    "message": f"File {file.filename} already exists!"
+                    "message": ResponseEnum.FILE_ALREADY_EXISTS,
                 }
             )
         else:
@@ -47,7 +48,7 @@ async def process_file(file_id: str, controller: FileController = Depends()):
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={
-            "message": "File processed successfully",
+            "message": ResponseEnum.PROCESSING_SUCCESS,
             "content": content
         }
     )

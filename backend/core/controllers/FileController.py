@@ -1,12 +1,15 @@
-import os
+import os, aiofiles, logging
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Depends
 
 from ..controllers import BaseController
 from ..models import File, Document
 from ..repositories import DocumentRepo
 from ..services import ParsingService, LanguageProcessingService, DirectoryService
 from ..models.enums import ResponseEnum
+from ..helpers.config import get_settings, Settings
+
+logger = logging.getLogger("uvicorn.error")
 
 
 class FileController(BaseController):
@@ -23,6 +26,7 @@ class FileController(BaseController):
         self.LanguageProcessingService = LanguageProcessingService
         self.DocumentRepository = DocumentRepository
 
+
     def parse(self, file_name):
         loader = self.ParsingService.load(file_name)
 
@@ -30,7 +34,7 @@ class FileController(BaseController):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={
-                    "message": f"file {file_name} not found."
+                    "message": ResponseEnum.FILE_NOT_FOUND
                 }
             )
 
@@ -38,7 +42,7 @@ class FileController(BaseController):
             raise HTTPException(
                 status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
                 detail={
-                    "message": f"file type {file_name} not supported."
+                    "message": ResponseEnum.FILE_TYPE_NOT_SUPPORTED
                 }
             )
 
@@ -46,6 +50,7 @@ class FileController(BaseController):
         content = "\n".join([doc.page_content for doc in content])
 
         return content  # the return will be updated to be mor e generic in the future
+
 
     def paginate(self, text: str, page_size: int = 1000) -> list:
         """
@@ -58,7 +63,8 @@ class FileController(BaseController):
         tokens = self.LanguageProcessingService.tokenize(text)
         return [" ".join(tokens[i:i + page_size]) for i in range(0, len(tokens), page_size)]
 
-    def _clean(self, text: str) -> str:
+
+    def clean(self, text: str) -> str:
         """
         Clean the extracted text.
         
@@ -82,13 +88,14 @@ class FileController(BaseController):
 
         return ' '.join(processed_tokens)
 
+
     def process(self, file_name: str) -> str:
         """
         Processes the content of a specified file by parsing it and 
         cleaning the parsed content.
 
         This method first retrieves the content of the file using the 
-        `parse` method, and then applies the `_clean` method to the 
+        `parse` method and then applies the `_clean` method to the
         parsed content to prepare it for further processing.
 
         Args:
@@ -98,7 +105,8 @@ class FileController(BaseController):
             str: The cleaned content of the file as a single string.
         """
         content = self.parse(file_name)
-        return self._clean(content)
+        return self.clean(content)
+
 
     async def upload(self, file: File) -> Document:
         """
@@ -107,7 +115,19 @@ class FileController(BaseController):
         :param file: File object containing the file information.
         :return: Processed content of the file.
         """
+        settings = get_settings()
+        file.filename = file.filename.replace(" ", "_").lower()
         file_path = os.path.join(DirectoryService.files_dir, file.filename)
+
+        try:
+            async with aiofiles.open(file_path, 'wb') as out_file:
+                while chunk := await file.read(settings.FILE_DEFAULT_CHUNK_SIZE):
+                    await out_file.write(chunk)
+
+        except Exception as e:
+            logger.error(f"Error writing file {file.filename}: {str(e)}")
+
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         content = self.process(file_path)
         created_document = await self.DocumentRepository.create(file, content)
@@ -115,10 +135,11 @@ class FileController(BaseController):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail={
-                    "message": f"File {file.filename} already exists!"
+                    "message": ResponseEnum.FILE_ALREADY_EXISTS
                 }
             )
         return created_document
+
 
     async def query(self, query: str) -> list:
         """
@@ -127,5 +148,5 @@ class FileController(BaseController):
         :param query: The search query.
         :return: A list of document titles matching the search query.
         """
-        query = self._clean(query)
+        query = self.clean(query)
         return await self.DocumentRepository.search(query)

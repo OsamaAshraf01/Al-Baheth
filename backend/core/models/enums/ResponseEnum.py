@@ -6,6 +6,7 @@ class ResponseEnum(Enum):
     FILE_SIZE_EXCEEDED = "file_size_exceeded"
     FILE_UPLOAD_SUCCESS = "file_uploaded_successfully"
     FILE_UPLOAD_FAILED = "file_uploading_failed"
+    FILE_ALREADY_EXISTS = "file_already_exists"
 
     PROCESSING_SUCCESS = "processing_success"
     PROCESSING_FAILED = "processing_failed"

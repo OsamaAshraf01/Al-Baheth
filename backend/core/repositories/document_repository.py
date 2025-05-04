@@ -1,8 +1,8 @@
-from models import File, Document
+from ..models import File, Document
 import hashlib
 from typing import Optional, List, Dict, Any
 from beanie import PydanticObjectId
-from services import IndexingService
+from ..services import IndexingService
 
 class DocumentRepository:
 

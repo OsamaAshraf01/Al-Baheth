@@ -1,4 +1,4 @@
-from helpers import Settings
+from ..helpers import Settings
 import os
 
 # this controller will contain the common methods that will be used by other controllers

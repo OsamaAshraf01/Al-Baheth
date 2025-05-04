@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import base_router, files_router, indexing_router, query_router
-from helpers.Lifespan import lifespan
+from .routes import base_router, files_router, indexing_router, query_router
+from .helpers.Lifespan import lifespan
 
 app = FastAPI(lifespan=lifespan)
 

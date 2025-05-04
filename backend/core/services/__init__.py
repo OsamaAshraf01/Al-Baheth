@@ -1,4 +1,4 @@
-from helpers import Annotated, Settings
+from ..helpers import Annotated, Settings
 from fastapi import Depends, Request
 from .Parsing import ParsingService as ParsingServiceClass
 from .NLP import LanguageProcessingService as LanguageProcessingServiceClass

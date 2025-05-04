@@ -1,4 +1,4 @@
-from controllers import BaseController
+from ..controllers import BaseController
 
 class QueryController(BaseController):
     async def query(self, query):

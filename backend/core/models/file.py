@@ -1,6 +1,6 @@
 from fastapi import UploadFile, HTTPException, File as FastAPIFile, Depends
-from helpers import Annotated
-from helpers.config import get_settings
+from ..helpers import Annotated
+from ..helpers.config import get_settings
 # from models.enums import UnitsEnum
 
 class _File:

@@ -1,6 +1,6 @@
 from fastapi import Request
 from .IndexingService import IndexingService
-from helpers.config import get_settings
+from ...helpers.config import get_settings
 
 class ElasticSearchService(IndexingService):
     def __init__(self, request: Request):

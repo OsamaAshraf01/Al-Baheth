@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from controllers import FileController
+from ..controllers import FileController
 
 query_router = APIRouter(
     prefix= "/api/v1/query",

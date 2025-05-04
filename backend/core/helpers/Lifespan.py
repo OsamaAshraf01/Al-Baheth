@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from motor.motor_asyncio import AsyncIOMotorClient
-from helpers.config import get_settings
+from ..helpers.config import get_settings
 from beanie import init_beanie
-from models import Document
-from models.enums import IndexingEnum
+from ..models import Document
+from ..models.enums import IndexingEnum
 from elasticsearch import AsyncElasticsearch
 
 @asynccontextmanager

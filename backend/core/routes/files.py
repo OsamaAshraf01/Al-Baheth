@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
-from controllers import FileController
-from models import File
+from ..controllers import FileController
+from ..models import File
 
 files_router = APIRouter(
     prefix= "/api/v1/files",

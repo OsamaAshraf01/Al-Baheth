@@ -1,5 +1,5 @@
 from .IndexingService import IndexingService
-from services.Directory import DirectoryService
+from ...services.Directory import DirectoryService
 import pyterrier as pt
 import os
 

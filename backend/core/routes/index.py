@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from controllers import IndexingController
+from ..controllers import IndexingController
 
 indexing_router = APIRouter(
     prefix= "/api/v1/indices",

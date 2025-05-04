@@ -1,7 +1,7 @@
-from controllers import BaseController
-from services import ParsingService, LanguageProcessingService, DirectoryService
-from models import File, Document
-from repositories import DocumentRepo
+from ..controllers import BaseController
+from ..services import ParsingService, LanguageProcessingService, DirectoryService
+from ..models import File, Document
+from ..repositories import DocumentRepo
 from fastapi import HTTPException, status
 import os
 

@@ -1,9 +1,9 @@
 from fastapi import HTTPException, Depends, Request
-from helpers import Settings
-from services.Parsing import ParsingService, LangChainService
-from services.NLP import LanguageProcessingService, NLTKService
-from services.Indexing import IndexingService, PyTerrierService, ElasticSearchService
-from models.enums import LanguageProcessingEnum, FileEnum, IndexingEnum
+from ..helpers import Settings
+from ..services.Parsing import ParsingService, LangChainService
+from ..services.NLP import LanguageProcessingService, NLTKService
+from ..services.Indexing import IndexingService, PyTerrierService, ElasticSearchService
+from ..models.enums import LanguageProcessingEnum, FileEnum, IndexingEnum
 
 
 def getParsingService(settings: Settings) -> ParsingService:

@@ -3,7 +3,7 @@ from fastapi import status, Depends
 import os
 from .BaseController import BaseController
 from .FileController import FileController
-from services import IndexingService, DirectoryService
+from ..services import IndexingService, DirectoryService
 
 class IndexingController(BaseController):
     def __init__(self, indexing_service: IndexingService, processing_controller: FileController = Depends()):

@@ -9,3 +9,4 @@ python-terrier==0.13.0
 requests==2.32.3
 beanie==1.29.0
 elasticsearch[async]==8.12.0
+aiofiles==24.1.0

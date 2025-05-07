@@ -15,19 +15,26 @@ class ElasticSearchService(IndexingService):
         
         :param file_id: The ID of the file to index.
         :param content: The content of the document to index.
+        :return: True if the document was indexed successfully, False otherwise.
         """
-        res = await self.es.index(index=self.index_name, id=file_id, body={"file_id": file_id, "content": content})
+        res = await self.es.index(
+            index=self.index_name,
+            id=file_id,
+            body={
+                "file_id": file_id,
+                "content": content
+            }
+        )
 
-        if res['result'] == 'created':
-            return True
-        return False
+        return res['result'] == 'created'
+
 
     async def search(self, query: str) -> list:
         '''
         Search for documents in Elasticsearch.
         
         :param query: The search query.
-        :return: A list of documents IDs matching the search query.
+        :return: A list of document IDs matching the search query.
         '''
         res = await self.es.search(
             index=self.index_name,

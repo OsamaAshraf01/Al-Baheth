@@ -11,16 +11,18 @@ class IndexingService(ABC):
         """
         Index the given corpus and return the index reference.
         
-        :param corpus: Dictionary containing the corpus to index. It consists of two keys: docno and text.
-        :return: Index reference.
+        :param file_id: The ID of the file to index.
+        :param content: The content of the document to index.
+        :return: True if the document was indexed successfully, False otherwise.
         """
         pass
 
+    @abstractmethod
     async def search(self, query: str) -> list:
         """
         Search for documents in the index.
         
         :param query: The search query.
-        :return: A list of documents IDs matching the search query.
+        :return: A list of document IDs matching the search query.
         """
         pass

@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from .BaseController import BaseController
 from .FileController import FileController
 from ..services import IndexingService, DirectoryService
+from ..models.enums import ResponseEnum
 
 
 class IndexingController(BaseController):
@@ -37,11 +38,19 @@ class IndexingController(BaseController):
         :return: JSON response with the index reference.
         """
         corpus = self.process_files()
-        index_ref = self.indexing_service.index(corpus)
+        index_success_count = 0
+
+        for doc in corpus:
+            file_id = doc['docno']
+            content = doc['text']
+            if self.indexing_service.index(file_id, content):
+                index_success_count += 1
+
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
-                "message": "Indexing completed successfully",
-                # "index_ref": index_ref
+                "message": ResponseEnum.INDEXING_SUCCESS.value,
+                "total_files": len(corpus),
+                "successfully_indexed_files": index_success_count,
             }
         )

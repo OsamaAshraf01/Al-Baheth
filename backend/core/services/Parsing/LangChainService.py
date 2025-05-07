@@ -1,7 +1,9 @@
 import os
 from http.client import responses
 
+from aiohttp.abc import HTTPException
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
+from fastapi import HTTPException, status
 
 from .ParsingService import ParsingService
 from ...models.enums import ProcessingEnum, ResponseEnum
@@ -20,7 +22,12 @@ class LangChainService(ParsingService):
         file_path = self._get_file_path(file_name)
 
         if not os.path.exists(file_path):
-            return ResponseEnum.FILE_NOT_FOUND
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={
+                    "message": ResponseEnum.FILE_NOT_FOUND.value
+                }
+            )
 
         if file_extension == ProcessingEnum.TXT.value:
             return TextLoader(file_path, encoding="utf-8")
@@ -31,4 +38,9 @@ class LangChainService(ParsingService):
         elif file_extension == ProcessingEnum.PPTX.value:
             return UnstructuredPowerPointLoader(file_path)
 
-        return ResponseEnum.FILE_TYPE_NOT_SUPPORTED
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail={
+                "message": ResponseEnum.FILE_TYPE_NOT_SUPPORTED.value
+            }
+        )

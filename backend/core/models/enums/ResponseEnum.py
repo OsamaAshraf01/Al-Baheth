@@ -7,9 +7,11 @@ class ResponseEnum(Enum):
     FILE_UPLOAD_SUCCESS = "file_uploaded_successfully"
     FILE_UPLOAD_FAILED = "file_uploading_failed"
     FILE_ALREADY_EXISTS = "file_already_exists"
+    FILE_VALID = "file_valid"
 
     PROCESSING_SUCCESS = "processing_success"
     PROCESSING_FAILED = "processing_failed"
+    INDEXING_SUCCESS = "indexing_success"
     FILE_NOT_FOUND = "file_not_found"
 
     INVALID_ID = "invalid_file_id"

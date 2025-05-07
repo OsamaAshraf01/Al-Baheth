@@ -34,7 +34,8 @@ class PyTerrierService(IndexingService):
         """
         Index the given corpus and return the index reference.
         
-        :param corpus: Dictionary containing the corpus to index. It consists of two keys: docno and text.
-        :return: Index reference.
+        :param file_id: The ID of the file to index.
+        :param content: The content of the document to index.
+        :return: True if the document was indexed successfully, False otherwise.
         """
         pass

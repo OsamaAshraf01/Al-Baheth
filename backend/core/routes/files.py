@@ -23,22 +23,14 @@ async def upload(file: File, controller: FileController = Depends()):
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
-                "message": ResponseEnum.FILE_UPLOAD_SUCCESS,
+                "message": ResponseEnum.FILE_UPLOAD_SUCCESS.value,
                 "hashed_key": document.hashed_content,
                 "content_type": document.content_type,
                 "title": document.title,
             }
         )
     except HTTPException as e:
-        if e.status_code == status.HTTP_409_CONFLICT:
-            return JSONResponse(
-                status_code=status.HTTP_409_CONFLICT,
-                content={
-                    "message": ResponseEnum.FILE_ALREADY_EXISTS,
-                }
-            )
-        else:
-            raise e
+        raise e
 
 
 @files_router.put("/{file_id}/process")
@@ -48,7 +40,7 @@ async def process_file(file_id: str, controller: FileController = Depends()):
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={
-            "message": ResponseEnum.PROCESSING_SUCCESS,
+            "message": ResponseEnum.PROCESSING_SUCCESS.value,
             "content": content
         }
     )

@@ -9,5 +9,5 @@ indexing_router = APIRouter(
 
 
 @indexing_router.put('/index_all')
-async def index_files(controller: IndexingController = Depends()):
-    return controller.index()
+async def index_all(controller: IndexingController = Depends()):
+    return await controller.index_all()

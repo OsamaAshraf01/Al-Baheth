@@ -25,7 +25,6 @@ async def upload(file: File, data_controller: DataController = Depends()):
             content={
                 "message": ResponseEnum.FILE_UPLOAD_SUCCESS.value,
                 "hashed_key": document.hashed_content,
-                "content_type": document.content_type,
                 "title": document.title,
             }
         )

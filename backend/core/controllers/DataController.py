@@ -66,7 +66,7 @@ class DataController(BaseController):
         return ' '.join(processed_tokens)
 
 
-    async def upload_file(self, file: File, settings: Settings = Depends(get_settings)) -> Document:
+    async def upload_file(self, file: File) -> Document:
         """
         Upload a file and process its content.
         
@@ -76,6 +76,7 @@ class DataController(BaseController):
         """
         file.filename = file.filename.replace(" ", "_").lower()
         file_path = os.path.join(DirectoryService.files_dir, file.filename)
+        settings = get_settings()
 
         try:
             async with aiofiles.open(file_path, 'wb') as out_file:

@@ -7,11 +7,11 @@ class ParsingService(ABC):
     """
 
     @abstractmethod
-    def load(self, file_path: str) -> str:
+    def load(self, file_name: str) -> str:
         """
         Read a file and return its text content.
         
-        :param file_path: Path to the file.
+        :param file_name: Path to the file.
         :return: Text content of the file.
         """
         pass

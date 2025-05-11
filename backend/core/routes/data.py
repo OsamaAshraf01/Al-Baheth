@@ -13,10 +13,6 @@ data_router = APIRouter(
 
 @data_router.post("/upload")
 async def upload(file: File, data_controller: DataController = Depends()):
-    # TODO: add a check for the file type and size --[DONE ✓]--
-    # TODO: add file processing after upload
-    # TODO: add assigning IDs to the files and map them to the main name using simple table
-    # TODO: Check if the file hash value already exist to avoid duplicates
     try:
         document = await data_controller.upload_file(file)
 

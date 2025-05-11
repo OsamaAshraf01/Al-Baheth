@@ -4,9 +4,10 @@ from typing_extensions import Annotated
 
 class Document(BeanieDocument):
     hashed_content: Annotated[str, Indexed(unique=True)]
-    original_content: str
-    processed_content: str
     title: str
+    parsed_text: str
+    embeddings: list[float]
+    bytes_content: bytes | None
 
     class Settings:
         collection = "corpus"

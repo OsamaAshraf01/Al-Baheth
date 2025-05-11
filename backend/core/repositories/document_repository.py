@@ -2,9 +2,8 @@ import hashlib
 from typing import Optional, Dict, Any
 
 from beanie import PydanticObjectId
-from fastapi import Depends
 
-from ..models import Document
+from ..models import Document, File
 from ..services import IndexingService
 
 
@@ -17,44 +16,47 @@ class DocumentRepository:
         :param indexing_service: An instance of IndexingService for indexing documents.
         """
         self.indexing_service = indexing_service
+        self.embedding_model = indexing_service.embedding_model
 
-    async def create(self, file_title: str, content: str, processed_content:str) -> Optional[Document]:
+    async def create(self, file: File, file_title: str, file_content: str) -> Optional[Document]:
         """
         Create a new document in the database from the file.
-        
+
+        :param file: The file object containing the content.
         :param file_title: The title of the file.
-        :param content: The content of the file to be hashed.
+        :param file_content: The content of the file to be hashed and embedded.
         :return: Document object created from the file.
-        :param processed_content: The processed content of the file.
         """
-        hashed_content = hashlib.sha256(content.encode()).hexdigest()
+        hashed_content = hashlib.sha256(file_content.encode()).hexdigest()
 
         found = await self.get_by_key(hashed_content)
         if found:
             return None
 
+
         document = Document(
             hashed_content=hashed_content,
-            original_content=content,
-            processed_content=processed_content,
+            parsed_text=file_content,
+            embeddings=self.embedding_model.encode(file_content),
             title=file_title,
+            bytes_content=await file.read() if file else None,
         )
 
         await document.insert()
 
-        await self.indexing_service.index(file_id=hashed_content, processed_content=processed_content)
+        await self.indexing_service.index(file_id=hashed_content, file_content=file_content)
 
         return document
 
     # for testing purposes only
-    async def search(self, processed_query: str) -> list:
+    async def search(self, query: str) -> list:
         """
         Search for documents in the index.
         
-        :param processed_query: The cleaned search query.
+        :param query: The cleaned search query.
         :return: A list of document titles matching the search query.
         """
-        results = await self.indexing_service.search(processed_query)
+        results = await self.indexing_service.search(query)
         scores = {
             result['file_id']: result['score'] for result in results
         }
@@ -64,13 +66,11 @@ class DocumentRepository:
             {
                 "title": doc.title,
                 "score": scores[doc.hashed_content],
-                "content": doc.original_content,
+                "content": doc.parsed_text,
             }
             for doc in docs
         ]
 
-        # sorting by score
-        final_results.sort(key=lambda x: x['score'], reverse=True)
         return final_results
 
     async def get_by_key(self, hashing_key: str) -> Optional[Document]:

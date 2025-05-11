@@ -5,9 +5,10 @@ from fastapi.responses import JSONResponse
 
 from .BaseController import BaseController
 from .DataController import DataController
-from ..services import IndexingService, DirectoryService
 from ..models.enums import ResponseEnum
 from ..repositories import DocumentRepo
+from ..services import IndexingService, DirectoryService
+from ..models import File
 
 
 class IndexingController(BaseController):
@@ -33,7 +34,11 @@ class IndexingController(BaseController):
             content = self.data_controller.parse_file(file_name)
             processed_content = self.data_controller.clean_text(content)
 
-            if await self.document_repository.create(file_name, content, processed_content):
+            if await self.document_repository.create(
+                    file=None,
+                    file_title=file_name,
+                    file_content=content,
+            ):
                 index_success_count += 1
 
         return JSONResponse(

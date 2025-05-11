@@ -41,13 +41,17 @@ class DataController(BaseController):
             raise e
 
 
-    def clean_text(self, text: str) -> str:
+    def clean_text(self, text: str, semantic:bool=True) -> str:
         """
         Clean the extracted text.
         
         :param text: Extracted text from a file.
+        :param semantic: Flag to indicate if semantic processing is needed.
         :return: Cleaned text.
         """
+
+        if semantic:
+            return self.language_processing_service.semantic_processing(text)
 
         # Normalization
         text = self.language_processing_service.normalize(text)
@@ -71,7 +75,6 @@ class DataController(BaseController):
         Upload a file and process its content.
         
         :param file: File object containing the file information.
-        :param settings: Settings object containing application settings.
         :return: Processed content of the file.
         """
         file.filename = file.filename.replace(" ", "_").lower()
@@ -89,8 +92,14 @@ class DataController(BaseController):
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         content = self.parse_file(file_path)
-        processed_content = self.clean_text(content)
-        created_document = await self.document_repository.create(file.filename, content, processed_content)
+        content = self.clean_text(content)
+
+        created_document = await self.document_repository.create(
+            file=file,
+            file_title=file.filename,
+            file_content=content
+        )
+
         if created_document is None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,

@@ -1,4 +1,5 @@
 import re
+import unicodedata
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -21,6 +22,22 @@ class LanguageProcessingService(ABC):
         text = text.lower()
         text = re.sub("[^a-z ]+", " ", text).strip()
         text = re.sub(r"\s+", " ", text).strip()
+        return text
+
+    def semantic_processing(self, text: str) -> str:
+        """
+        Processes the input text by performing semantic normalization. This includes
+        removing HTML tags, converting text to lowercase, normalizing Unicode
+        characters, and stripping extra whitespace.
+        Semantic Processing does not include tokenization, stopword removal, lemmatization, or stemming.
+
+        :param text: The input text to be processed.
+        :return: A semantically normalized string processed as per the specified operations.
+        """
+        text = unicodedata.normalize('NFKC', text)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        text = text.lower()
+        text = re.sub(r'\s+', ' ', text).strip()
         return text
 
     @abstractmethod

@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     DB_URL: str
     ES_URL: str
     ES_INDEXING: str
+    EMBEDDING_MODEL: str
 
     model_config = {
         "env_file": os.path.join(os.path.dirname(__file__), "../.env"),
